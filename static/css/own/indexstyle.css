@@ -1,0 +1,90 @@
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #888;
+    line-height: 30px;
+    /*text-align: center;*/
+}
+.content-container{
+	padding-top: 0px;
+	/*background: #e6e6ff;*/
+}
+.content{
+	padding:10px 10px;
+/*background: hsl(240, 100%, 99%);*/
+	border-radius: 5px;
+	/*border:5px solid #df80ff;*/
+}
+.sidebar{
+	/*background:rgb(90, 215, 204);*/
+  margin-top:-10px;
+  margin-bottom:40px;
+  padding-top:10px;
+	/*padding-bottom: 620px;*/
+  background:   #e6ecff;
+	/*background: rgba(0, 0, 0, 0.35);*/
+}
+
+.info  {
+	font-weight: 500;
+	/*text-align: center;*/
+	font-size:20px;
+	padding-top:0px;
+	padding-bottom: 6px;
+	border-radius: 3px;
+	padding-left:20px;
+
+	/*background: 	#b3b3ff;*/
+ }
+
+.head-content{
+	padding:10px 20px;
+}
+
+a,  {
+	color: #19b9e7;
+	text-decoration: none;
+    -o-transition: all .3s; -moz-transition: all .3s; -webkit-transition: all .3s; -ms-transition: all .3s; transition: all .3s;
+}
+
+h1, h2 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	vertical-align:center;
+	padding:10px 5px;
+	font-size: 20;
+    font-weight: 300;
+    color: #555;
+    line-height: 15px;
+}
+
+h3 {
+	font-size: 22px;
+    font-weight: 300;
+    color: #555;
+    line-height: 30px;
+}
+
+
+/***** Top content *****/
+
+.inner-bg {
+    padding: 60px 0 0px 0;
+}
+
+
+/***** Footer *****/
+
+
+/*@media (max-width: 768px) {
+  .navbar-brand {
+    height: 50px; // Logo will not overhang
+  }
+
+  .navbar-toggle {
+    margin-top: 0px; // Adjust toggle position
+  }
+
+}*/

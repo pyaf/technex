@@ -1,0 +1,41 @@
+{% extends 'own/base.html'%}
+{% block title%}
+        <title>Campus Ambassador Portal</title>
+{% endblock %}
+{%block extra_css%}
+        <link rel="stylesheet" href="/static/css/own/indexstyle.css">
+{%endblock%}
+
+    <body>
+                    {% block unauth %}
+                        <a class="btn btn-primary" href="account/login">Log In</a>
+                        <a class="btn btn-info" href="account/signup">Register</a>
+                    </form>
+                    {% endblock %}
+
+        {% block content %}
+        <div class="inner-bg"> <!-- style="background-image: url('/static/img/1.jpg');" > -->
+          <div class="container-fluid content-container">
+              <div class="col-sm-8 content">
+                <div class="info">
+                    <h1>Introduction</h1>
+                </div>
+    <div class="head-content">
+<p>
+The Technex Campus Ambassador Program is a platform for students who are passionate about technology, creativity and innovation to spread the charm of one of the oldest techno-management festival of this country in their college. A Technex Campus Ambassador is a leader with a keen interest in starting and building community of people equally passionate and ready to show off their dormant skills to the world.
+</p>
+<p>
+You will be the face, voice, and evangelist of Technex at your campus. You will be the champion of our vision for hosting great technically innovative contests and building one of the largest network of enthusiasts like you all over the country.
+</p>
+    </div>
+
+<hr>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock%}

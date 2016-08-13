@@ -1,0 +1,9 @@
+<form class="" action="" method="post">
+  {% csrf_token %}
+  {%for field in form %}
+  {{field.label}}: {{field.errors}}
+  {{field}}
+  {%endfor%}
+
+  <button type="submit" name="button">log in</button>
+</form>
