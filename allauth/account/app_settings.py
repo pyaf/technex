@@ -32,7 +32,7 @@ class AppSettings(object):
                 not in (self.AuthenticationMethod.USERNAME,
                         self.AuthenticationMethod.USERNAME_EMAIL)
 
-    def _setting(self, name, dflt):
+    def _setting(self, name, dflt): #dflt = default value of 'name'
         from django.conf import settings
         getter = getattr(settings,
                          'ALLAUTH_SETTING_GETTER',

@@ -85,7 +85,8 @@ class AjaxCapableProcessFormViewMixin(object):
         return _ajax_response(self.request, response, form=form)
 
 
-class LoginView(RedirectAuthenticatedUserMixin,AjaxCapableProcessFormViewMixin,FormView):
+class LoginView(RedirectAuthenticatedUserMixin,
+                AjaxCapableProcessFormViewMixin,FormView):
     form_class = LoginForm
     template_name = "account/login." + app_settings.TEMPLATE_EXTENSION
     success_url = None
@@ -227,28 +228,28 @@ class ConfirmEmailView(TemplateResponseMixin, View):
         return self.render_to_response(ctx)
 
     def post(self, *args, **kwargs):
-        
+
         self.object = confirmation = self.get_object()
         confirmation.confirm(self.request)
-        
+
         get_adapter(self.request).add_message(
             self.request,
             messages.SUCCESS,
             'account/messages/email_confirmed.txt',
             {'email': confirmation.email_address.email})
-        
+
         if app_settings.LOGIN_ON_EMAIL_CONFIRMATION:
             resp = self.login_on_confirm(confirmation)
             if resp is not None:
                 return resp
-        
+
         # Don't -- allauth doesn't touch is_active so that sys admin can
         # use it to block users et al
         #
         # user = confirmation.email_address.user
         # user.is_active = True
         # user.save()
-        
+
         redirect_url = self.get_redirect_url()
         if not redirect_url:
             ctx = self.get_context_data()

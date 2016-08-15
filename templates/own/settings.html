@@ -1,11 +1,11 @@
-{% extends 'own/base.html' %}
+{% extends 'own/loggedin_base.html' %}
 
 {%block extra_css %}
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
 {%endblock%}
 
 {% block navbar_name %}
-<l class="navbar-brand">Hello {{user.name}}, Welcome to the Settings !</l>
+<l class="navbar-brand">Hello {{request.user.userprofile.name}}, Welcome to the Settings !</l>
 {% endblock %}
 {% block extra_auth %}
   <li>
@@ -24,15 +24,13 @@
               <strong>Settings</strong>
             </div>
             <div class="list-group">
-              <a class="list-group-item " href="/change_email/">
+              <a class="list-group-item " href="{% url 'account_email' %}">
                 Change Email
               </a>
-              <a class="list-group-item " href="/change_password">
+              <a class="list-group-item " href="{% url 'account_change_password' %}">
                 Change Password
               </a>
-                <a class="list-group-item " href="/account_delete/">
-                  Delete Account
-                </a>
+              <b class="list-group-item"></b>
             </div>
           </div>
         </div>

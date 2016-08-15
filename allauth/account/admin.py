@@ -13,7 +13,7 @@ class EmailAddressAdmin(admin.ModelAdmin):
 
     def __init__(self, *args, **kwargs):
         super(EmailAddressAdmin, self).__init__(*args, **kwargs)
-        if not self.search_fields and django.VERSION[:2] < (1, 7):
+        if not self.search_fields and django.VERSION[:2] < (1, 7): #if django version is less than 1.7
             self.search_fields = self.get_search_fields(None)
 
     def get_search_fields(self, request):

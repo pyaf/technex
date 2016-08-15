@@ -1,11 +1,11 @@
- {% extends 'own/base.html' %}
+ {% extends 'own/loggedin_base.html' %}
 
 {%block extra_css %}
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
 {%endblock%}
 
 {% block navbar_name %}
-<l class="navbar-brand">Hello {{user.name}}, Welcome to the Dashboard !</l>
+<l class="navbar-brand">Hello {{ request.user.userprofile.name }}, Welcome to the Dashboard !</l>
 {% endblock %}
 
 {% block content %}
@@ -15,17 +15,18 @@
   <div class="row">
   <div class="col-md-3 columns">
   <div class="panel panel-default">
-      <div class="panel-heading"><strong>Settings</strong></div>
+      <div class="panel-heading"><strong>Tasks</strong></div>
       <div class="list-group">
-          <a class="list-group-item " href="/to_do_list/">
+          <a class="list-group-item " href="#">
               To-Do list
           </a>
-          <a class="list-group-item " href="/poster_upload/">
+          <a class="list-group-item " href="#">
               Poster Upload
-          <a class="list-group-item " href="upcoming_events/">
+            </a>
+          <a class="list-group-item " href="#">
             Upcoming Events
           </a>
-          <a class="list-group-item " href="ca_say/">
+          <a class="list-group-item " href="#">
             Suggestions and Feedback
           </a>
 
