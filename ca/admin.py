@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
-from ca.models import UserProfile
+# from django.contrib.admin.options import ModelAdmin
+from ca.models import UserProfile, MassNotification,UserNotification, Poster
 
 #Define an inline admin descriptor for UserProfile model
 class UserProfileInline(admin.StackedInline):
@@ -25,7 +26,25 @@ class UserAdmin(UserAdmin):
     inlines = (UserProfileInline, )
     list_display = (name, college, mobile_number, 'email', 'is_staff')
 
+class MassNotificationAdmin(admin.ModelAdmin):
+    list_display = ['mass_message']
+
+class UserNotificationAdmin(admin.ModelAdmin):
+    def name(obj):
+        return "%s" % obj.user.userprofile.name
+    name.short_description = 'Name'
+    list_display = [name,'message']
+
+class PosterAdmin(admin.ModelAdmin):
+    def name(obj):
+        return "%s" % obj.user.userprofile.name
+    name.short_description = 'Name'
+    list_display = (name,'poster_1','poster_2','poster_3','poster_4')
+
 #Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.unregister(Group)
+admin.site.register(Poster, PosterAdmin)
 admin.site.register(User,UserAdmin)
+admin.site.register(MassNotification, MassNotificationAdmin)
+admin.site.register(UserNotification, UserNotificationAdmin)

@@ -15,8 +15,8 @@
       {% block auth %}
 
       <div class="text-center">
-        <h2>hello {{request.user.userprofile.name}}! Let's move on to the Dashboard</h2>
-
+        <h2>hello {{request.user.userprofile.name}}! </h2>
+          <h2> Let's move on to the Dashboard</h2>
         <a class="btn btn-default btn-lg" href="{% url 'dashboard' %}">Dashboard</a>
       </div>
       {% endblock %}

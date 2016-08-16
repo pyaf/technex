@@ -1,8 +1,10 @@
 from django.conf.urls import url, include
-
+from django.conf import settings
+from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
 from django.contrib import admin
 from ca.views import (IndexView,ProfileCreateView,
-					DashboardView,SettingsView)
+					DashboardView,AccountDetailView,
+					NotificationsView,ToDoListView, PosterUploadView)
 
 
 urlpatterns = [
@@ -18,5 +20,18 @@ urlpatterns = [
 
 	# url(r'^/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/accounts/login'})
 
-	url(r'^settings/$', SettingsView.as_view(), name='settings'),
+	url(r'^settings/$', AccountDetailView.as_view(), name='settings'),
+
+	#notification
+	url(r'^notifications/$', NotificationsView, name='notifications'),
+
+	#to_do_list
+	url(r'^to_do_list/$', ToDoListView.as_view(), name='to_do_list'),
+
+	#poster_upload
+	url(r'^poster_upload/$', PosterUploadView.as_view(), name='poster_upload'),
+
 ]
+
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

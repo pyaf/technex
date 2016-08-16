@@ -1,0 +1,60 @@
+{% extends 'own/loggedin_base.html' %}
+
+{%block extra_css %}
+<link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
+{%endblock%}
+
+{% block navbar_name %}
+<l class="navbar-brand">Hello {{ request.user.userprofile.name }}, Welcome to the Dashboard !</l>
+{% endblock %}
+
+{% block content %}
+
+<div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 columns">
+
+        <div class="panel panel-default">
+          <div class="panel-heading"><strong>Tasks</strong></div>
+            <div class="list-group">
+               <a class="list-group-item " href="{% url 'to_do_list' %}">
+                 To-Do list
+               </a>
+               <a class="list-group-item " href="{% url 'poster_upload' %}">
+                 Poster Upload
+               </a>
+               <a class="list-group-item " href="#">
+               Upcoming Events
+               </a>
+               <a class="list-group-item " href="#">
+                 Suggestions and Feedback
+               </a>
+               <b class="list-group-item"></b>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9 columns">
+          <div class="container">
+            <h1>Notifications:</h1>
+            <ul><br>
+              {% for msg in all_msgs %}
+              <li>
+                {{ msg.mass_message }}
+              </li> <br>
+              {% endfor %}
+              {% for msg in user_msgs %}
+              <li>
+                {{ msg.message }}
+              </li> <br>
+              {% endfor %}
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

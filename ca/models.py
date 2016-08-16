@@ -16,20 +16,17 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User,
                                 primary_key=True,)
 
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     year = models.IntegerField(choices=year_choices)
     mobile_number = models.PositiveIntegerField()
     whatsapp_number = models.PositiveIntegerField()
-    college = models.CharField(max_length=100)
-    college_address = models.TextField(max_length=250)
+    college = models.CharField(max_length=250)
+    college_address = models.TextField()
     postal_address = models.TextField()
     pincode = models.PositiveIntegerField()
 
-    def __str__(self):
-        return self.name +'-'+ self.college +'-' +self.user.email
-
     def __unicode__(self):
-        return self.name +'-'+ self.college +'-'+self.user.email
+        return self.name
 
 '''
 def create_profile(sender, **kwargs):
@@ -46,3 +43,33 @@ post_save.connect(create_profile, sender=User)
     # or
     # def get_absolute_url(self):
     #     return u'/some_url/%d' % self.id
+
+class MassNotification(models.Model):
+    user = models.ManyToManyField(User)
+    mass_message = models.TextField()
+
+    def __unicode__(self):
+        return self.mass_message
+
+
+class UserNotification(models.Model):
+    user = models.ForeignKey(User)
+    message = models.TextField()
+
+    def __unicode__(self):
+        return self.message
+
+#primary_key=True implies null=False and unique=True.
+#Only one primary key is allowed on an object.
+
+class Poster(models.Model):
+    user = models.OneToOneField(User, primary_key=True)
+    poster_1 = models.ImageField(upload_to='posters')
+    poster_2 = models.ImageField(upload_to='posters')
+    poster_3 = models.ImageField(upload_to='posters')
+    poster_4 = models.ImageField(upload_to='posters')
+
+    # def __unicode__(self):
+    #     return "%s's posters " % self.user.userprofile.name
+    def __unicode__(self):
+        return '%s' % self.poster_1

@@ -1,5 +1,5 @@
 {% extends 'own/loggedin_base.html' %}
-
+<!-- settings page -->
 {%block extra_css %}
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
 {%endblock%}
@@ -34,9 +34,16 @@
             </div>
           </div>
         </div>
-        <div class="col-md-9 columns">
+        <div class="col-md-7 columns">
           <div class="container">
-            <h3>Account Details</h3>
+            <h3>Account Details:</h3>
+            <ul>
+              {% for obj in object_list %}
+              <li>
+                {{obj.name}}
+              </li>
+              {% endfor %}
+            </ul>
 
           </div>
         </div>
