@@ -33,13 +33,13 @@ class UserNotificationAdmin(admin.ModelAdmin):
     def name(obj):
         return "%s" % obj.user.userprofile.name
     name.short_description = 'Name'
-    list_display = [name,'message']
+    list_display = [name,'message','mark_read']
 
 class PosterAdmin(admin.ModelAdmin):
     def name(obj):
         return "%s" % obj.user.userprofile.name
     name.short_description = 'Name'
-    list_display = (name,'poster_1','poster_2','poster_3','poster_4')
+    list_display = (name,'poster_1')
 
 #Re-register UserAdmin
 admin.site.unregister(User)

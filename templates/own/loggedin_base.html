@@ -41,7 +41,11 @@
                     {% block auth %}
                     <ul class="nav navbar-nav pull-right">
                             <li>
-                            <a href="{% url 'notifications' %}"><i class="fa fa-bell"></i> Notifications</a>
+                            <a href="{% url 'notifications' %}"><i class="fa fa-bell"></i> Notifications
+                            <span class="badge">
+                            {{ user_msgs.count }}
+                            </span>
+                            </a>
                           </li>
                           {% block extra_auth %}
                             <li>

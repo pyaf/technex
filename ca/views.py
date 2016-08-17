@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, HttpResponse
 from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views import generic
@@ -9,7 +9,7 @@ from ca.models import UserProfile, MassNotification, UserNotification, Poster
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from ca.forms import ImageUploadForm
 
 class LoggedInMixin(object):
     """ A mixin requiring a user to be logged in. """
@@ -17,6 +17,12 @@ class LoggedInMixin(object):
         if not request.user.is_authenticated():
             raise Http404
         return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
+
+class NoticeMixin(object):
+	def get_context_data(self, **kwargs):
+		context = super(NoticeMixin,self).get_context_data(**kwargs)
+		context[""] = True
+		return context
 
 def get_user(request):
     current_user = request.get.user
@@ -34,12 +40,27 @@ class ProfileCreateView(LoggedInMixin,CreateView):
 			'college_address','postal_address','pincode']
 	success_url=reverse_lazy('dashboard')
 
-class PosterUploadView(LoggedInMixin,CreateView):
-	model = Poster
-	template_name = 'own/poster_form.html'
-	fields = ['poster_1','poster_2', 'poster_3', 'poster_4']
-	success_url=reverse_lazy('dashboard')
-
+# class PosterUploadView(LoggedInMixin,CreateView):
+# 	model = Poster
+# 	template_name = 'own/poster_form.html'
+# 	fields = ['poster_1','poster_2', 'poster_3', 'poster_4']
+# 	success_url = reverse_lazy('dashboard')
+#
+def PosterUploadView(request):
+	if request.method == 'POST':
+		form = ImageUploadForm(request.POST, request.FILES,instance=request.user)
+		if form.is_valid():
+			m = Poster()
+			m.poster_1 = form.cleaned_data['poster_1']
+			m.poster_2 = form.cleaned_data['poster_2']
+			m.poster_3 = form.cleaned_data['poster_3']
+			m.poster_4 = form.cleaned_data['poster_4']
+			m.user = request.user
+			m.save()
+			return HttpResponse('image upload success')
+	else:
+		form = ImageUploadForm()
+		return render(request,'own/poster_form.html',{'form':form})
 
 class DashboardView(LoggedInMixin,generic.View):
 
@@ -56,17 +77,23 @@ def NotificationsView(request):
 		'user_msgs': request.user.usernotification_set.all,
 	}
 	return render(request, template_name, context)
+#{{ request.user.massnotification_set.count|add:request.user.usernotification_set.count}}
 
 
-
-class AccountDetailView(LoggedInMixin,ListView):
+def AccountDetailView(request):
 	template_name = 'own/settings.html'
-
+	return render(request, template_name, {})
 
 class ToDoListView(LoggedInMixin,generic.ListView):
 	template_name = 'own/to_do_list.html'
-	def get_queryset(self):
-		pass
+	queryset = MassNotification.objects.all()
+	def get_context_data(self, **kwargs):
+	# Returns a dictionary representing the template context.
+	# The keyword arguments provided will make up the returned context
+		context = super(ToDoListView,self).get_context_data(**kwargs)
+		context['user_msgs'] = UserNotification.objects.filter(mark_read=False)
+		#and so on for more models
+		return  context
 
 
 

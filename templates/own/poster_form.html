@@ -5,7 +5,7 @@
 {%endblock%}
 
 {% block navbar_name %}
-<l class="navbar-brand">Hello {{user.name}}, Welcome to the Dashboard !</l>
+<l class="navbar-brand">Hello {{request.user.userprofile.name}}, Welcome to the Dashboard !</l>
 {% endblock %}
 
 {% block content %}
@@ -33,22 +33,18 @@
             </div>
           </div>
         </div>
-
-
       <div class="col-md-6 columns">
-        <form  method="post" action="{% url 'poster_upload' %}" enctype="multipart/form-data">
+        <form  method="post" action="" enctype="multipart/form-data">
           {% csrf_token %}
-          {%for field in form%}
-          {{field.label_tag}}
-          <br>
-          {{field}}
-          {{field.errors}}
-          <br> <br>
-          {%endfor%}
+            {% for field in form %}
+            {{field.errors}}
+            <label>{{field.label_tag}}</label> <br>
+              {{field}}
+              <br><br>
+            {%endfor%}
           <button type="submit">Submit</button>
         </form>
       </div>
-
     </div>
   </div>
 </div>

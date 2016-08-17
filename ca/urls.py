@@ -20,7 +20,7 @@ urlpatterns = [
 
 	# url(r'^/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/accounts/login'})
 
-	url(r'^settings/$', AccountDetailView.as_view(), name='settings'),
+	url(r'^settings/$', AccountDetailView, name='settings'),
 
 	#notification
 	url(r'^notifications/$', NotificationsView, name='notifications'),
@@ -29,9 +29,10 @@ urlpatterns = [
 	url(r'^to_do_list/$', ToDoListView.as_view(), name='to_do_list'),
 
 	#poster_upload
-	url(r'^poster_upload/$', PosterUploadView.as_view(), name='poster_upload'),
+	url(r'^poster_upload/$', PosterUploadView, name='poster_upload'),
 
 ]
 
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

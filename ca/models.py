@@ -13,8 +13,7 @@ class UserProfile(models.Model):
         (5,'Fifth'),
     ]
     # allauth_app_settings.USER_MODEL = auth.User
-    user = models.OneToOneField(User,
-                                primary_key=True,)
+    user = models.OneToOneField(User, primary_key=True,)
 
     name = models.CharField(max_length=100)
     year = models.IntegerField(choices=year_choices)
@@ -47,29 +46,36 @@ post_save.connect(create_profile, sender=User)
 class MassNotification(models.Model):
     user = models.ManyToManyField(User)
     mass_message = models.TextField()
+    creation_time = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __unicode__(self):
         return self.mass_message
+# bom = user.massnotification_set.all().order_by('-creation_time')
+#request.user.massnotification_set.all()
 
+class MassNotificationRead(models.Model):
+    user = models.OneToOneField(User)
+    
 
 class UserNotification(models.Model):
     user = models.ForeignKey(User)
     message = models.TextField()
+    mark_read = models.BooleanField(default=False)
+    creation_time = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __unicode__(self):
         return self.message
+#request.user.usernotification_set.all()
 
 #primary_key=True implies null=False and unique=True.
 #Only one primary key is allowed on an object.
 
 class Poster(models.Model):
-    user = models.OneToOneField(User, primary_key=True)
-    poster_1 = models.ImageField(upload_to='posters')
-    poster_2 = models.ImageField(upload_to='posters')
-    poster_3 = models.ImageField(upload_to='posters')
-    poster_4 = models.ImageField(upload_to='posters')
+    user = models.OneToOneField(User, related_name='poster_user', primary_key=True)
+    poster_1 = models.ImageField(upload_to='posters/%m/%d')
+    poster_2 = models.ImageField(upload_to='posters/%m/%d')
+    poster_3 = models.ImageField(upload_to='posters/%m/%d')
+    poster_4 = models.ImageField(upload_to='posters/%m/%d')
 
-    # def __unicode__(self):
-    #     return "%s's posters " % self.user.userprofile.name
     def __unicode__(self):
         return '%s' % self.poster_1
