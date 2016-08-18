@@ -34,21 +34,26 @@
             </div>
           </div>
         </div>
-        <div class="col-md-9 columns">
           <div class="container">
+            <div class="col-md-7 columns">
             <h1>Notifications:</h1>
-            <ul><br>
-              {% for msg in all_msgs %}
-              <li>
-                {{ msg.mass_message }}
-              </li> <br>
-              {% endfor %}
-              {% for msg in user_msgs %}
-              <li>
-                {{ msg.message }}
-              </li> <br>
-              {% endfor %}
-            </ul>
+            <ul class=" list-group">
+              {% if all_msgs or user_msgs %}
+                {% for msg in all_msgs %}
+                <li class="list-group-item list-group-item-info">
+                  {{ msg.mass_message }}
+                </li>
+                {% endfor %}
+                {% for msg in user_msgs %}
+                <li  class="list-group-item list-group-item-info ">
+                  <form action="">
+                       {{ msg.message }}
+                    <a  type="checkbox" class="pull-right"/>
+                  </form>
+                </li>
+                {% endfor %}
+              {% endif %}
+              </ul>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response, HttpResponse
+from django.shortcuts import render, render_to_response, HttpResponse, redirect
 from django.http import Http404
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views import generic
@@ -33,12 +33,12 @@ class IndexView(generic.View):
 		template_name = 'own/index.html'
 		return render(request, template_name, {})
 
-class ProfileCreateView(LoggedInMixin,CreateView):
+class ProfileCreateView(LoggedInMixin,CreateView,):
 	model = UserProfile
 	template_name = 'own/userprofile_form.html'
 	fields = ['name','year', 'mobile_number', 'whatsapp_number', 'college',
 			'college_address','postal_address','pincode']
-	success_url=reverse_lazy('dashboard')
+	success_url = reverse_lazy('dashboard')
 
 # class PosterUploadView(LoggedInMixin,CreateView):
 # 	model = Poster
@@ -47,20 +47,24 @@ class ProfileCreateView(LoggedInMixin,CreateView):
 # 	success_url = reverse_lazy('dashboard')
 #
 def PosterUploadView(request):
+	context ={
+		'all_msgs' : request.user.massnotification_set.all,
+		'user_msgs' : request.user.usernotification_set.all,
+		'form' : ImageUploadForm(),
+		'poster_count': request.user.poster_set.count()
+	}
 	if request.method == 'POST':
 		form = ImageUploadForm(request.POST, request.FILES,instance=request.user)
 		if form.is_valid():
 			m = Poster()
-			m.poster_1 = form.cleaned_data['poster_1']
-			m.poster_2 = form.cleaned_data['poster_2']
-			m.poster_3 = form.cleaned_data['poster_3']
-			m.poster_4 = form.cleaned_data['poster_4']
+			m.poster = form.cleaned_data['poster']
 			m.user = request.user
 			m.save()
-			return HttpResponse('image upload success')
+			return redirect('/dashboard/')
+		else:
+			return render(request,'own/poster_form.html',context)
 	else:
-		form = ImageUploadForm()
-		return render(request,'own/poster_form.html',{'form':form})
+		return render(request,'own/poster_form.html',context)
 
 class DashboardView(LoggedInMixin,generic.View):
 
@@ -82,7 +86,14 @@ def NotificationsView(request):
 
 def AccountDetailView(request):
 	template_name = 'own/settings.html'
-	return render(request, template_name, {})
+	context = {
+	'userprofile' : request.user.userprofile,
+	}
+	return render(request, template_name, context)
+
+# class AccountDetailView(generic.DetailView):
+# 	template_name = 'own/settings.html'
+# 	model = UserProfile
 
 class ToDoListView(LoggedInMixin,generic.ListView):
 	template_name = 'own/to_do_list.html'
@@ -91,7 +102,7 @@ class ToDoListView(LoggedInMixin,generic.ListView):
 	# Returns a dictionary representing the template context.
 	# The keyword arguments provided will make up the returned context
 		context = super(ToDoListView,self).get_context_data(**kwargs)
-		context['user_msgs'] = UserNotification.objects.filter(mark_read=False)
+		context['college_count'] = UserProfile.objects.filter(college="IIT BHU").count()
 		#and so on for more models
 		return  context
 

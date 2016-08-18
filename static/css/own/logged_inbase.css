@@ -1,0 +1,24 @@
+.badge{
+  margin-left: -3.5px;
+  margin-top: -10px;
+  background-color: #8282c9;
+}
+.fa{
+   font-size: 1.3em !important;
+  /*color: #8282c9;*/
+
+}
+.dropdown-menu {
+  min-width: 300px;
+  margin-left: -20px;
+
+ }
+ .navbar{
+    background-color: :#fff;
+    border-color: #030033;
+    box-shadow: 0 8px 6px -6px #999;
+}
+
+.navbar-default .navbar-nav > li > a {
+ color: black;
+  }

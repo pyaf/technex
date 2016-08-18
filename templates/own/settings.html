@@ -7,7 +7,7 @@
 {% block navbar_name %}
 <l class="navbar-brand">Hello {{request.user.userprofile.name}}, Welcome to the Settings !</l>
 {% endblock %}
-{% block extra_auth %}
+{% block extra_link %}
   <li>
       <a href="/dashboard/"><i class="fa fa-cog"></i> Dashboard</a>
   </li>
@@ -30,21 +30,46 @@
               <a class="list-group-item " href="{% url 'account_change_password' %}">
                 Change Password
               </a>
-              <b class="list-group-item"></b>
             </div>
           </div>
         </div>
-        <div class="col-md-7 columns">
-          <div class="container">
+        <div class="container">
+        <div class="col-md-5 columns">
             <h3>Account Details:</h3>
-            <ul>
-              {% for obj in object_list %}
-              <li>
-                {{obj.name}}
-              </li>
-              {% endfor %}
-            </ul>
-
+              <table class="table table-striped table-hover tabel-responsive">
+                  <tr>
+                    <td>Name :</td>
+                    <td>{{userprofile.name}}</td>
+                  </tr>
+                  <tr>
+                    <td>Year :</td>
+                    <td>{{userprofile.year}}</td>
+                  </tr>
+                  <tr>
+                    <td>College :</td>
+                    <td>{{userprofile.college}}</td>
+                  </tr>
+                  <tr>
+                    <td>Mobile Number :</td>
+                    <td>{{userprofile.mobile_number}}</td>
+                  </tr>
+                  <tr>
+                    <td>WhatsApp Number :</td>
+                    <td>{{userprofile.whatsapp_number}}</td>
+                  </tr>
+                  <tr>
+                    <td>College Address :</td>
+                    <td>{{userprofile.college_address}}</td>
+                  </tr>
+                  <tr>
+                    <td>Postal Address :</td>
+                    <td>{{userprofile.postal_address}}</td>
+                  </tr>
+                  <tr>
+                    <td>Pincode :</td>
+                    <td>{{userprofile.pincode}}</td>
+                  </tr>
+              </table>
           </div>
         </div>
       </div>

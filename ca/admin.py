@@ -39,7 +39,7 @@ class PosterAdmin(admin.ModelAdmin):
     def name(obj):
         return "%s" % obj.user.userprofile.name
     name.short_description = 'Name'
-    list_display = (name,'poster_1')
+    list_display = (name,'poster')
 
 #Re-register UserAdmin
 admin.site.unregister(User)

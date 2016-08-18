@@ -30,10 +30,23 @@
           </a>
         </div>
       </div>
-
-                 </div>
-                 <div class="col-md-9 columns">
-         </div>
+    </div>
+    <div class="col-md-9 columns">
+        <div class=" text-center jumbotron">
+          <h2> Tasks to Do</h2>
+        </div>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <h1>{{college_count}}/20 Registrations</h1>
+            <div class="progress">
+              <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar"
+            aria-valuenow="{{college_count}}" aria-valuemin="0" aria-valuemax="100" style="width:{{college_count}}%">
+              {{college_count }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
        </div>
      </div>
  </div>
