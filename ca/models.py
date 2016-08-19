@@ -24,6 +24,7 @@ class UserProfile(models.Model):
     college_address = models.TextField()
     postal_address = models.TextField()
     pincode = models.PositiveIntegerField()
+    profile_completed = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -32,6 +33,7 @@ class UserProfile(models.Model):
 # def create_profile(sender,created, instance, **kwargs):
 #     if created:
 #         user_profile = UserProfile(user = instance)
+#         user_profile.year
 #         user_profile.save()
 
     # #where to redirect after successful userprofile registration

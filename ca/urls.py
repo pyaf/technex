@@ -4,7 +4,8 @@ from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
 from django.contrib import admin
 from ca.views import (IndexView,ProfileCreateView,
 					DashboardView,AccountDetailView,
-					NotificationsView,ToDoListView, PosterUploadView)
+					NotificationsView,ToDoListView, PosterUploadView,
+					 UpcomingEventsView)
 
 
 urlpatterns = [
@@ -12,7 +13,7 @@ urlpatterns = [
 	url(r'^$', IndexView.as_view(), name= 'index'),
 
 	#profile_registration
-	url(r'^profile_registration/$', ProfileCreateView.as_view(),
+	url(r'^profile_registration/$', ProfileCreateView,
 		name='profile_registration'),
 
 	#dashboard
@@ -30,6 +31,9 @@ urlpatterns = [
 
 	#poster_upload
 	url(r'^poster_upload/$', PosterUploadView, name='poster_upload'),
+
+	#upcoming_events
+	url(r'^upcoming_events/$', UpcomingEventsView, name='upcoming_events'),
 
 ]
 

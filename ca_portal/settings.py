@@ -23,9 +23,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'django.contrib.sites',
     # 'sgbackend',
-    # 'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,8 +142,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/dashboard/'
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/dashboard/'
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
+# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/profile_registration/'
+# ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/profile_registration/'
 # Set to console for development/testing
 EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 

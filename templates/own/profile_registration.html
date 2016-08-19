@@ -31,20 +31,13 @@
           </div>
         </div>
       <div class="col-md-6 columns">
-        <div class="list-group">
-          <li class="list-group-item">
-            Total number of posters uploaded by you : <b>{{poster_count}}</b>
-          </li>
-        </div>
-
-        <form  method="post" action="" enctype="multipart/form-data">
+        <form class="" action="" method="post">
           {% csrf_token %}
-            {{form.errors}}
-            <label class="btn btn-default btn-file">Upload New Poster:
-          <input name="poster" type="file" style="display: none;" onchange="$('#upload-file-info').html($(this).val());" /></label>
-          <span class='label label-info' id="upload-file-info"></span>
-            <br> <br>
-          <button class="btn btn-info" type="submit">Submit</button>
+          {%for field in form %}
+          {{field.label_tag}}: {{field.errors}}<br>
+          {{field}}<br> <br>
+          {%endfor%}
+          <button type="submit" name="button">Get Started</button>
         </form>
       </div>
     </div>
