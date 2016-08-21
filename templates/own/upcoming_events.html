@@ -5,18 +5,18 @@
 {%endblock%}
 
 {% block navbar_name %}
-<l class="navbar-brand">Hello {{user.name}}, Welcome to the Dashboard !</l>
+<l class="navbar-brand">Hello {{userprofile.name}}, Welcome to the Dashboard !</l>
 {% endblock %}
 
 {% block content %}
 
 <div class="content">
- <div class="container">
- <div class="row">
- <div class="col-md-3 columns">
- <div class="panel panel-default">
-     <div class="panel-heading"><strong>Tasks</strong></div>
-     <div class="list-group">
+  <div class="container">
+   <div class="row">
+     <div class="col-md-3 columns">
+       <div class="panel panel-default">
+       <div class="panel-heading"><strong>Tasks</strong></div>
+         <div class="list-group">
          <a class="list-group-item  " href="/to_do_list/">
              To-Do list
          </a>
@@ -25,12 +25,15 @@
          <a class="list-group-item active" href="/upcoming_events/">
            Upcoming Events
          </a>
-     </div>
- </div>
-                 </div>
-                 <div class="col-md-9 columns">
-         </div>
+        </div>
        </div>
+      </div>
+      <div class="col-md-9 columns">
+        <div class="jumbotron">
+          <h3>Exciting events comming soon!, Stay Technexed!!</h3>
+        </div>
+      </div>
+      </div>
      </div>
  </div>
 </div>

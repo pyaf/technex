@@ -2,10 +2,15 @@
 
 {%block extra_css %}
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
+<style>
+a {
+      text-decoration:none !important;
+   }
+</style>
 {%endblock%}
 
 {% block navbar_name %}
-<l class="navbar-brand">Hello {{user.name}}, Welcome to the Dashboard !</l>
+<l class="navbar-brand">Hello {{userprofile.name}}, Welcome to the Dashboard !</l>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +18,7 @@
 <div class="content">
   <div class="container">
     <div class="row">
-      <div class="col-md-3 columns">
+      <div class="col-md-3 ">
         <div class="panel panel-default">
           <div class="panel-heading"><strong>Tasks</strong></div>
           <div class="list-group">
@@ -22,25 +27,82 @@
           </a>
           <a class="list-group-item " href="{% url 'poster_upload' %}">
              Poster Upload
-          <a class="list-group-item " href="">
+          <a class="list-group-item " href="{% url 'upcoming_events' %}">
            Upcoming Events
           </a>
 
         </div>
       </div>
     </div>
-    <div class="col-md-9 columns">
+    <div class="col-md-9 ">
         <div class=" text-center jumbotron">
           <h2> Tasks to Do</h2>
         </div>
         <ul class="list-group">
           <li class="list-group-item">
+            {% if college_count != 0 %}
             <h1>{{college_count}}/20 Registrations</h1>
+            {% else %}
+            <h1>No registrations yet.</h1>
+            {% endif %}
             <div class="progress">
-              <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar"
+              <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar"
             aria-valuenow="{{college_count}}" aria-valuemin="0" aria-valuemax="100" style="width:{{college_count}}%">
               {{college_count }}
               </div>
+            </div>
+
+
+{% if technexuser.count != 0 %}
+<div class="panel-group">
+  <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#userlist">See Registrations</a>
+        </h4>
+      </div>
+
+
+    <div id="userlist" class="panel-collapse collapse">
+    <div class="container-fluid">
+      <br>
+    {% for user in technexuser %}
+      <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#{{user.name}}">
+                {{user.name}}</a>
+              </h4>
+            </div>
+
+            <div id="{{user.name}}" class="panel-collapse collapse">
+              <div class="panel-body">
+                <table class="table  table-hover tabel-responsive">
+                  <td>Year :</td>
+                  <td>{{user.year}}</td>
+                </tr>
+                <tr>
+                  <td>Mobile Number :</td>
+                  <td>{{user.mobile_number}}</td>
+                </tr>
+                <tr>
+                  <td>WhatsApp Number :</td>
+                  <td>{{user.whatsapp_number}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+    </div>
+{% endif %}
+
+            </div>
             </div>
           </li>
         </ul>

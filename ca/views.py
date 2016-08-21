@@ -9,35 +9,43 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from ca.models import UserProfile, MassNotification, UserNotification, Poster
+
+from ca.models import *
 from ca.forms import ImageUploadForm, ProfileCreationForm
 
+def context_func(request):
+    college = request.user.userprofile.college
+    context = {
+            'college_count' : TechnexUser.objects.filter(college=college).count(),
+            'userprofile' : request.user.userprofile,
+            'all_msgs': request.user.massnotification_set.all,
+            'user_msgs': request.user.usernotification_set.all,
+            'poster_count': request.user.poster_set.count(),
+            'form' : ImageUploadForm(),
+            'technexuser' : TechnexUser.objects.filter(college=college),
+            'posters' : Poster.objects.filter(user=request.user),
+        }
+    return context
 
-class LoggedInMixin(object):
-    """ A mixin requiring a user to be logged in. """
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
-            raise Http404
-        return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
-
-# class NoticeMixin(object):
-#     def get_context_data(self, **kwargs):
-#         context = super(NoticeMixin,self).get_context_data(**kwargs)
-#         context[""] = True
-#         return context
-
-# def get_user(request):
-#     current_user = request.get.user
-#     return current_user
 
 class IndexView(generic.View):
     def get(self, request):
         template_name = 'own/index.html'
         return render(request, template_name, {})
 
+@login_required(login_url='/')
+def DashboardView(request):
+    template_name = 'own/dashboard.html'
+    try:
+        profile_done = request.user.userprofile.profile_completed
+        if profile_done:
+            return render(request,template_name,{})
+    except:
+        return redirect('/profile_registration')
+
 @login_required(login_url = "/")
 def ProfileCreateView(request):
-    context = {
+    profile_context = {
             'form': ProfileCreationForm()
     }
     template_name = 'own/profile_registration.html'
@@ -59,8 +67,75 @@ def ProfileCreateView(request):
                 messages.warning(request, 'You have already created your profile.',fail_silently=True)
                 return redirect('/dashboard/')
         except:
-            return render(request, template_name, context)
+            return render(request, template_name, profile_context)
 
+@login_required(login_url = "/")
+def PosterUploadView(request):
+    template_name = 'own/poster_form.html'
+    context = context_func(request)
+
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            img = form.save(commit=False)
+            img.user = request.user
+            img.save()
+            messages.success(request, 'Poster uploaded successfully.',fail_silently=True)
+            return redirect('/dashboard/')
+        else:
+            return render(request,template_name,context)
+    else:
+        return render(request,template_name,context)
+
+@login_required(login_url = "/")
+def AllPosterView(request):
+    template_name = 'own/all_posters.html'
+    context = context_func(request)
+    return render(request,template_name, context)
+
+@login_required(login_url = "/")
+def NotificationsView(request):
+    template_name = 'own/notifications.html'
+    context = context_func(request)
+    return render(request, template_name, context)
+#{{ request.user.massnotification_set.count|add:request.user.usernotification_set.count}}
+
+@login_required(login_url = "/")
+def AccountDetailView(request):
+    template_name = 'own/settings.html'
+    context = context_func(request)
+    return render(request, template_name, context)
+
+@login_required(login_url = "/")
+def ToDoListView(request):
+    template_name = 'own/to_do_list.html'
+    context = context_func(request)
+    return render(request,template_name,context)
+
+@login_required(login_url='/')
+def UpcomingEventsView(request):
+    template_name = 'own/upcoming_events.html'
+    context = context_func(request)
+
+    return render(request,template_name,context)
+
+# class LoggedInMixin(object):
+#     """ A mixin requiring a user to be logged in. """
+#     def dispatch(self, request, *args, **kwargs):
+#         if not request.user.is_authenticated():
+#             raise Http404
+#         return super(LoggedInMixin, self).dispatch(request, *args, **kwargs)
+#
+
+# class NoticeMixin(object):
+#     def get_context_data(self, **kwargs):
+#         context = super(NoticeMixin,self).get_context_data(**kwargs)
+#         context[""] = True
+#         return context
+
+# def get_user(request):
+#     current_user = request.get.user
+#     return current_user
 
 # class ProfileCreateView(LoggedInMixin,CreateView,):
 #     model = UserProfile
@@ -75,75 +150,23 @@ def ProfileCreateView(request):
 #     fields = ['poster_1','poster_2', 'poster_3', 'poster_4']
 #     success_url = reverse_lazy('dashboard')
 #
-@login_required(login_url = "/")
-def PosterUploadView(request):
-    context ={
-        'all_msgs' : request.user.massnotification_set.all,
-        'user_msgs' : request.user.usernotification_set.all,
-        'form' : ImageUploadForm(),
-        'poster_count': request.user.poster_set.count()
-
-    }
-    template_name = 'own/poster_form.html'
-    if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            img = form.save(commit=False)
-            img.user = request.user
-            img.save()
-            messages.success(request, 'Poster uploaded successfully.',fail_silently=True)
-            return redirect('/dashboard/')
-        else:
-            return render(request,template_name,context)
-    else:
-        return render(request,template_name,context)
-
-class DashboardView(LoggedInMixin,generic.View):
-
-    def get(self, request):
-        template_name = 'own/dashboard.html'
-        return render(request, template_name, {})
-
-
-@login_required(login_url = "/")
-def NotificationsView(request):
-    template_name = 'own/notifications.html'
-    context ={
-        'all_msgs': request.user.massnotification_set.all,
-        'user_msgs': request.user.usernotification_set.all,
-    }
-    return render(request, template_name, context)
-#{{ request.user.massnotification_set.count|add:request.user.usernotification_set.count}}
-
-@login_required(login_url = "/")
-def AccountDetailView(request):
-    template_name = 'own/settings.html'
-    context = {
-    'userprofile' : request.user.userprofile,
-    }
-    return render(request, template_name, context)
 
 # class AccountDetailView(generic.DetailView):
 #     template_name = 'own/settings.html'
 #     model = UserProfile
 
-class ToDoListView(LoggedInMixin,generic.ListView):
-    template_name = 'own/to_do_list.html'
-    queryset = MassNotification.objects.all()
-    def get_context_data(self, **kwargs):
-    # Returns a dictionary representing the template context.
-    # The keyword arguments provided will make up the returned context
-        context = super(ToDoListView,self).get_context_data(**kwargs)
-        context['college_count'] = UserProfile.objects.filter(college="IIT BHU").count()
-        #and so on for more models
-        return context
+# class ToDoListView(LoggedInMixin,generic.ListView):
+#     template_name = 'own/to_do_list.html'
+#     queryset = MassNotification.objects.all()
+#     def get_context_data(self, **kwargs):
+#     # Returns a dictionary representing the template context.
+#     # The keyword arguments provided will make up the returned context
+#         context = super(ToDoListView,self).get_context_data(**kwargs)
+#         context['college_count'] = UserProfile.objects.filter(college="IIT BHU").count()
+#         #and so on for more models
+#         return context
 
 
-@login_required(login_url='/')
-def UpcomingEventsView(request):
-    template_name = 'own/upcoming_events.html'
-    context = {}
-    return render(request,template_name,context)
 
 # class LoginRequiredMixin(object):
 #     """

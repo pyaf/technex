@@ -2,10 +2,7 @@ from django.conf.urls import url, include
 from django.conf import settings
 from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
 from django.contrib import admin
-from ca.views import (IndexView,ProfileCreateView,
-					DashboardView,AccountDetailView,
-					NotificationsView,ToDoListView, PosterUploadView,
-					 UpcomingEventsView)
+from ca.views import *
 
 
 urlpatterns = [
@@ -17,7 +14,7 @@ urlpatterns = [
 		name='profile_registration'),
 
 	#dashboard
-	url(r'^dashboard/$', DashboardView.as_view(), name= 'dashboard' ),
+	url(r'^dashboard/$', DashboardView, name= 'dashboard' ),
 
 	# url(r'^/logout/$', 'django.contrib.auth.views.logout',{'next_page': '/accounts/login'})
 
@@ -27,13 +24,16 @@ urlpatterns = [
 	url(r'^notifications/$', NotificationsView, name='notifications'),
 
 	#to_do_list
-	url(r'^to_do_list/$', ToDoListView.as_view(), name='to_do_list'),
+	url(r'^to_do_list/$', ToDoListView, name='to_do_list'),
 
 	#poster_upload
 	url(r'^poster_upload/$', PosterUploadView, name='poster_upload'),
 
 	#upcoming_events
 	url(r'^upcoming_events/$', UpcomingEventsView, name='upcoming_events'),
+
+	#user's posters
+	url(r'^all_posters/$', AllPosterView, name='all_posters'),
 
 ]
 

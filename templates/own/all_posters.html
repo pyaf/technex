@@ -1,7 +1,10 @@
 {% extends 'own/loggedin_base.html' %}
 
 {%block extra_css %}
+<link rel="stylesheet" href="/static/css/bootstrap4.min.css">
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
 {%endblock%}
 
 {% block navbar_name %}
@@ -9,13 +12,12 @@
 {% endblock %}
 
 {% block content %}
-
+<br>
 <div class="content">
   <div class="container">
     <div class="row">
 
-      <div class="col-md-3 columns">
-
+      <div class="col-md-3 ">
         <div class="panel panel-default">
           <div class="panel-heading"><strong>Tasks</strong></div>
             <div class="list-group">
@@ -30,31 +32,39 @@
             </div>
           </div>
         </div>
-      <div class="col-md-6 ">
+
+      <div class="col-md-9">
+        {% if poster_count == 0 %}
         <div class="list-group">
           <li class="list-group-item">
-            {% if poster_count != 0 %}
-            Total number of posters uploaded by you : <b>{{poster_count}}</b>
-            {% else %}
             You have not uploaded any posters yet!!
-            {% endif %}
           </li>
         </div>
-          <div class="container">
-              <form  method="post" action="" enctype="multipart/form-data">
-                {% csrf_token %}
-                Upload New Poster : <br> <br>
-                <input name="poster" type="file"/> <br>
-                {{form.errors}}
-                <button class="btn btn-info" type="submit">Upload</button>
-              </form>
+        {% else %}
+
+        <div class="container">
+          <div class="card-columns">
+              {% for img in posters %}
+                <div class="card">
+                  <div class="view overlay hm-white-slight">
+                  <img src="/media/{{ img }}" class="img-fluid" alt="Card image cap">
+                  <a href="#">
+                  <div class="mask"></div>
+                    </a>
+                  </div>
+                  <div class="card-block">
+                    <h4 class="card-title">Poster {{forloop.counter}} :</h4>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
           </div>
-<!-- style="display: none;" onchange="$('#upload-file-info').html($(this).val());" -->
+        </div>
+            {% endif %}
+
       </div>
-      <a href="{% url 'all_posters' %}" class="btn btn-default">See all Uploaded Posters</a>
     </div>
   </div>
-</div>
-</div>
+
 
 {% endblock %}

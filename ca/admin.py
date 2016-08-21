@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
 # from django.contrib.admin.options import ModelAdmin
-from ca.models import UserProfile, MassNotification,UserNotification, Poster
+from ca.models import *
 
 #Define an inline admin descriptor for UserProfile model
 class UserProfileInline(admin.StackedInline):
@@ -41,6 +41,10 @@ class PosterAdmin(admin.ModelAdmin):
     name.short_description = 'Name'
     list_display = (name,'poster')
 
+class TechnexUserAdmin(admin.ModelAdmin):
+    list_display = ('name','college')
+
+
 #Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.unregister(Group)
@@ -48,3 +52,4 @@ admin.site.register(Poster, PosterAdmin)
 admin.site.register(User,UserAdmin)
 admin.site.register(MassNotification, MassNotificationAdmin)
 admin.site.register(UserNotification, UserNotificationAdmin)
+admin.site.register(TechnexUser,TechnexUserAdmin)
