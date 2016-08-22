@@ -1,6 +1,7 @@
 dj-database-url==0.4.1
 Django==1.9.8
 django-allauth==0.26.1
+django-widget-tweaks==1.4.1
 gunicorn==19.6.0
 oauthlib==1.1.2
 Pillow==3.3.0

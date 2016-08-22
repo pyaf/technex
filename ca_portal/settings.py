@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.account',
     'django.contrib.sites',
+    'widget_tweaks',
     # 'sgbackend',
     'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',

@@ -11,13 +11,50 @@
     <link rel="stylesheet" href="/static/css/font-awesome.css" media="screen" title="no title" charset="utf-8">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 
+    <style media="screen">
+    html{
+      height: 100%;
+    }
+
+    body {
+      height: 100%;
+      width: 100%;
+    }
+
+    #canvas {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    .jumbotron {
+     background: rgb(200, 54, 54) !important; /* This is for ie8 and below */
+     background: rgba(200, 54, 54, 0.3) !important;
+    }
+    </style>
     {%endblock%}
 
     {% block extra_head %}
-
     {% endblock %}
   </head>
-  <body>
+  <body id="canvas">
+    {% block head_js %}
+    <script src="/static/js/trianglify.min.js"></script>
+    <script>
+    function addTriangleTo(target) {
+        var dimensions = target.getClientRects()[0];
+        var pattern = Trianglify({
+            width: dimensions.width,
+            height: dimensions.height
+        });
+        target.style['background-image'] = 'url(' + pattern.png() + ')';
+    }
+
+    addTriangleTo(document.getElementById('canvas'));
+    </script>
+    {% endblock %}
+
 
     {% block body %}
 

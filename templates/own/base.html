@@ -10,16 +10,44 @@
         <!-- <link rel="stylesheet" href="/static/css/own/basestyle.css"> -->
         <link rel="stylesheet" href="/static/css/font-awesome.css" media="screen" title="no title" charset="utf-8">
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <style media="screen">
+        html, body {
+          height:100%;
+          margin:0;
+          padding:0;
+          }
+
+          html{
+          height: 100%;
+          }
+
+          body {
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
+          }
+          #trianglify {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          }
+          .jumbotron {
+           background: rgb(200, 54, 54) !important; /* This is for ie8 and below */
+           background: rgba(200, 54, 54, 0.3) !important;
+          }
+        </style>
 
         {%endblock%}
 
         {%block extra_css%}
+
         {% endblock %}
 
-        {% block extra_head %}
-        {% endblock %}
+
     </head>
-<body>
+<body id="canvas">
         {%block intial_content%}
         {%endblock%}
         {% if user.is_authenticated %}
@@ -55,10 +83,27 @@
     {% block extra_body %}
     {% endblock %}
 
+    </script>
         <!-- Javascript -->
         <script src="/static/js/1.11.3jquery.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/trianglify.min.js"></script>
+
+
     {% block extra_js%}
+    <script>
+    function addTriangleTo(target) {
+        var dimensions = target.getClientRects()[0];
+        var pattern = Trianglify({
+            width: dimensions.width,
+            height: dimensions.height
+        });
+        target.style['background-image'] = 'url(' + pattern.png() + ')';
+    }
+
+    addTriangleTo(document.getElementById('canvas'));
+    addTriangleTo(document.getElementById('other'));
+    </script>
     {%endblock%}
 
     </body>

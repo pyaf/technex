@@ -36,7 +36,6 @@ class UserProfile(models.Model):
 # def create_profile(sender,created, instance, **kwargs):
 #     if created:
 #         user_profile = UserProfile(user = instance)
-#         user_profile.year
 #         user_profile.save()
 
     # #where to redirect after successful userprofile registration
