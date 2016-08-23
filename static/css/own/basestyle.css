@@ -1,11 +1,27 @@
 
-footer {
-	color: white;
-	text-align:center;
-	padding:10px;
-	background: rgb(33, 167, 196);
-}
-.footer-header{
-	verical-align:middle;
-	padding:4px;
-}
+html, body {
+	height:100%;
+	margin:0;
+	padding:0;
+	}
+
+	html{
+	height: 100%;
+	}
+
+	body {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	}
+	#trianglify {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	}
+	.jumbotron {
+	 background: rgb(200, 54, 54) !important; /* This is for ie8 and below */
+	 background: rgba(200, 54, 54, 0.3) !important;
+	}

@@ -39,7 +39,8 @@ def DashboardView(request):
     try:
         profile_done = request.user.userprofile.profile_completed
         if profile_done:
-            return render(request,template_name,{})
+            context = context_func(request)
+            return render(request,template_name,context)
     except:
         return redirect('/profile_registration')
 

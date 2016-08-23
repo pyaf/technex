@@ -5,7 +5,7 @@
 {%endblock%}
 
 {% block navbar_name %}
-<l class="navbar-brand">Hello {{request.user.userprofile.name}}, Welcome to the Dashboard !</l>
+<l class="navbar-brand">Posters!</l>
 {% endblock %}
 
 {% block content %}
@@ -50,8 +50,9 @@
               </form>
           </div>
 <!-- style="display: none;" onchange="$('#upload-file-info').html($(this).val());" -->
+<br>
+&nbsp <a href="{% url 'all_posters' %}" class="btn btn-default">See all Uploaded Posters</a>
       </div>
-      <a href="{% url 'all_posters' %}" class="btn btn-default">See all Uploaded Posters</a>
     </div>
   </div>
 </div>
