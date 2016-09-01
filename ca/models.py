@@ -13,12 +13,10 @@ year_choices = [
         (4, 'Fourth'),
         (5,'Fifth'),
     ]
-class UserProfile(models.Model):
+class CAProfile(models.Model):
 
     # allauth_app_settings.USER_MODEL = auth.User
     user = models.OneToOneField(User, primary_key=True)
-
-    name = models.CharField(max_length=100)
     year = models.IntegerField(choices=year_choices)
     mobile_number = models.BigIntegerField()
     whatsapp_number = models.BigIntegerField()
@@ -29,7 +27,7 @@ class UserProfile(models.Model):
     profile_completed = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.name
+        return self.user.first_name
 '''use BigIntegerField for postgresql'''
 '''for sqlite3 etc. use IntegerField(validators=[MaxValueValidator(9999999999)])'''
 # @receiver(post_save, sender=User)

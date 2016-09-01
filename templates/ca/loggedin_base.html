@@ -11,7 +11,7 @@
         {%block css %}
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static/css/own/logged_inbase.css">
-        <link rel="stylesheet" href="/static/css/font-awesome.css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="/static/css/font-awesome.min.css" media="screen" title="no title" charset="utf-8">
         <style media="screen">
 
         </style>
@@ -24,24 +24,12 @@
       </head>
   <body id="canvas">
         {% block headjs %}
-        <script src="/static/js/trianglify.min.js"></script>
-        <script>
-        function addTriangleTo(target) {
-            var dimensions = target.getClientRects()[0];
-            var pattern = Trianglify({
-                width: dimensions.width,
-                height: dimensions.height
-            });
-            target.style['background-image'] = 'url(' + pattern.png() + ')';
-        }
-
-        addTriangleTo(document.getElementById('canvas'));
-        </script>
+<script src="/static/js/base.js" charset="utf-8"></script>
         {% endblock %}
 
 
     {% block navbar%}
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav id="accordion" class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -55,12 +43,12 @@
                      {% endblock %}
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav pull-right list-inline">
+                    <ul class="menu nav navbar-nav pull-right list-inline">
                           <li class="dropdown">
                             <a class=" dropdown-toggle" href=""  data-toggle="dropdown"><i class="fa fa-bell"></i>
                               Notifications
                               {% if user_msgs.count != 0 %}
-                              <span class="badge">{{user_msgs.count}}</span>
+                              <span class="badge" id="badge_count" value="{{user_msgs.count}}">{{user_msgs.count}}</span>
                               {% endif %}</a>
                               <ul class="dropdown-menu list-group">
                                 {% if all_msgs or user_msgs %}
@@ -70,12 +58,16 @@
                                   </li>
                                   {% endfor %}
                                   {% for msg in user_msgs %}
-                                  <li class="list-group-item list-group-item-info ">
-                                    <form action="">
+
+
+                                  <li class="list-group-item">
+                                  <form class="form" action="" method="post">
                                          {{ msg.message }}
-                                      <input  type="checkbox" class="pull-right" />
+                                      <input  type="checkbox" class=" checkbox pull-right" id="{{msg.id}}" />
                                     </form>
                                   </li>
+
+
                                   {% endfor %}
                                   {% else %}
                                     <li class="list-group-item list-group-item-info">No Notifications for you!!</li>
@@ -113,9 +105,9 @@
         <!-- Javascript -->
         <script src="/static/js/1.11.3jquery.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/notify.js"></script>
 
 {% block extra_js%}
-
 {%endblock%}
     </body>
     {%block footer%}

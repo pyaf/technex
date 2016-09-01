@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import static, staticfiles_urlpatterns
 from django.contrib import admin
 from ca.views import *
 
+app_name='ca'
 
 urlpatterns = [
 	#first page : index page
@@ -34,6 +35,8 @@ urlpatterns = [
 
 	#user's posters
 	url(r'^all_posters/$', AllPosterView, name='all_posters'),
+
+	url(r'^notified/$', NoticeBooleanUpdate, name='notified'),
 
 ]
 

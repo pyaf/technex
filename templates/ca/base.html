@@ -62,22 +62,10 @@
         <script src="/static/js/1.11.3jquery.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
         <script src="/static/js/trianglify.min.js"></script>
-
+        <script src="/static/js/base.js" charset="utf-8"></script>
 
     {% block extra_js%}
-    <script>
-    function addTriangleTo(target) {
-        var dimensions = target.getClientRects()[0];
-        var pattern = Trianglify({
-            width: dimensions.width,
-            height: dimensions.height
-        });
-        target.style['background-image'] = 'url(' + pattern.png() + ')';
-    }
-
-    addTriangleTo(document.getElementById('canvas'));
-    // addTriangleTo(document.getElementById('other'));
-    </script>
+  
     {%endblock%}
 
     </body>

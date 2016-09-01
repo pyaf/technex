@@ -19,9 +19,11 @@
     box-shadow: 0 8px 6px -6px #999;
 }
 
-.navbar-default .navbar-nav > li > a {
- color: black;
+.menu{
+ display: inline-block !important;
   }
+
+
   html, body {
     height:100%;
     margin:0;

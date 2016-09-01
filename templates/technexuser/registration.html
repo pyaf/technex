@@ -1,0 +1,31 @@
+{% extends 'technexuser/base.html'%}
+{%block intial_content%}
+<div class="jumbotron text-center">
+  <h1>Register</h1>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+
+      </div>
+      <div class="col-md-6 ">
+        <form class="" action="" method="post">
+          {% csrf_token %}
+          {% for field in form %}
+          {{  form.non_field_errors }}
+
+          <div class="form-group">
+          {{ field }}
+          {{field.errors}}
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary" name="button">Get Started</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{%endblock%}
