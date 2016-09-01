@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect,HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, redirect,HttpResponseRedirect, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -20,6 +20,7 @@ def IndexView(request):
 
 def RegisterView(request):
     template_name = 'technexuser/registration.html'
+    data = {}
     if request.method == "POST":
         form = RegisterForm(request.POST)
         post = request.POST
@@ -38,12 +39,16 @@ def RegisterView(request):
             status = UserStatus.objects.create(user=user,is_techuser=True)
             new_user = authenticate(username=username, password=password)
             login(request, new_user)
-
-            return redirect('/dashboard')
+            data['status'] = 'OK'
+            return JsonResponse(data)
         else:
-            return render(request,template_name,{'form':form})
+            data['error'] = True
+            data['status'] = 'Form Not Validated'
+            return JsonResponse(data)
     else:
-        return render(request,template_name,{'form':RegisterForm()})
+        data['error'] = True
+        data['status'] = 'Invalid Request'
+        return JsonResponse(data)
 
 
 def LoginView(request):
@@ -59,11 +64,16 @@ def LoginView(request):
                 login(request,user)
                 return redirect('/dashboard')
             else:
-                return render(request,template_name,{'form':form})
+                data['status'] = 'OK'
+            return JsonResponse(data)
         else:
-            return render(request,template_name,{'form':form})
+            data['error'] = True
+            data['status'] = 'Form Not Validated'
+            return JsonResponse(data)
     else:
-        return render(request,template_name,{'form': LoginForm()})
+        data['error'] = True
+        data['status'] = 'Invalid Request'
+        return JsonResponse(data)
 
 @login_required(login_url='/login') #not /login/
 def LogoutView(request):
