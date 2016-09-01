@@ -12,10 +12,7 @@
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static/css/own/logged_inbase.css">
         <link rel="stylesheet" href="/static/css/font-awesome.min.css" media="screen" title="no title" charset="utf-8">
-        <style media="screen">
-
-        </style>
-
+        <script src="/static/js/trianglify.min.js" charset="utf-8"></script>
         {%endblock%}
 
         {%block extra_css%}
@@ -24,7 +21,7 @@
       </head>
   <body id="canvas">
         {% block headjs %}
-<script src="/static/js/base.js" charset="utf-8"></script>
+        <script src="/static/js/base.js" charset="utf-8"></script>
         {% endblock %}
 
 
@@ -108,6 +105,24 @@
         <script src="/static/js/notify.js"></script>
 
 {% block extra_js%}
+<script>
+function checkScroll(){
+    var startY = $('.navbar').height() * 2; //The point where the navbar changes in px
+
+    if($(window).scrollTop() > startY){
+        $('.navbar').addClass("scrolled");
+    }else{
+        $('.navbar').removeClass("scrolled");
+    }
+}
+
+if($('.navbar').length > 0){
+    $(window).on("scroll load resize", function(){
+        checkScroll();
+    });
+}
+
+</script>
 {%endblock%}
     </body>
     {%block footer%}

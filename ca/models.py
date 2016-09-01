@@ -27,7 +27,7 @@ class CAProfile(models.Model):
     profile_completed = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.user.first_name
+        return '%s-%s' %(self.college, self.user)
 '''use BigIntegerField for postgresql'''
 '''for sqlite3 etc. use IntegerField(validators=[MaxValueValidator(9999999999)])'''
 # @receiver(post_save, sender=User)

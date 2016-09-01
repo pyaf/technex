@@ -59,11 +59,12 @@ def DashboardView(request):
     template_name = 'ca/dashboard.html'
     try:
         profile_done = request.user.caprofile.profile_completed
-        if profile_done:
-            context = context_call(request)
-            return render(request,template_name,context)
+        context = context_call(request)
     except:
         return redirect('/ca/profile_registration')
+    else:
+        return render(request,template_name,context)
+        # return redirect('/ca/profile_registration')
 
 @login_required(login_url = "/ca/")
 def ProfileCreateView(request):
@@ -87,9 +88,9 @@ def ProfileCreateView(request):
             return render(request,template_name,{'form':form})
     else:
         try:
-            if request.user.caprofile.profile_completed == True:
-                messages.warning(request, 'You have already created your profile.',fail_silently=True)
-                return redirect('/ca/dashboard/')
+            profile_done = request.user.caprofile.profile_completed
+            messages.warning(request, 'You have already created your profile.',fail_silently=True)
+            return redirect('/ca/dashboard')
         except:
             return render(request, template_name, profile_context)
 

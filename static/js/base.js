@@ -1,4 +1,3 @@
-
 function addTriangleTo(target) {
     var dimensions = target.getClientRects()[0];
     var pattern = Trianglify({
@@ -9,4 +8,3 @@ function addTriangleTo(target) {
 }
 
 addTriangleTo(document.getElementById('canvas'));
-// addTriangleTo(document.getElementById('other'));

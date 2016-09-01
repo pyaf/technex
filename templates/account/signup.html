@@ -26,7 +26,7 @@
       {{field.errors}}
       {% endfor %}
       <!--  CHANGED TO REDIRECT TO 'PROFILE REGISTRATION PAGE' AFTER USER SIGNUP -->
-      <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'profile_registration' %}" />
+      <input type="hidden" name="{{ redirect_field_name }}" value="{% url 'ca:profile_registration' %}" />
 
       <button class="btn btn-primary"type="submit">{% trans "Register" %} &raquo;</button>
     </form>
