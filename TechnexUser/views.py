@@ -11,6 +11,8 @@ import json
 from TechnexUser.models import TechProfile, UserStatus
 from TechnexUser.forms import LoginForm, RegisterForm
 
+#json.loads will load a json object into a python dict,
+# json.dumps will dump a python dict to a json object,
 
 def context_call(request):
     context = {
@@ -27,7 +29,6 @@ def IndexView(request):
 def RegisterView(request):
     template_name = 'technexuser/registration.html'
     response_data = {}
-
     data =json.loads(request.body)
     try:
         form = RegisterForm(data)
@@ -44,9 +45,10 @@ def RegisterView(request):
         techprofile.save()
 
         status = UserStatus.objects.create(user=user,is_techuser=True)
+
         new_user = authenticate(username=email, password=password)
         login(request, new_user)
-        print 'DOOOOOOOOOOOOOOOONNNNNNNNEEEEEEEEEEEEEEE'
+
         response_data['status'] = "Profile created successfully"
         return JsonResponse(response_data)
     except:
@@ -65,27 +67,25 @@ def RegisterView(request):
 @csrf_exempt
 def LoginView(request):
     template_name = 'technexuser/login.html'
-    data = {}
-    if request.method == "POST":
-        post = request.POST
-        form = LoginForm(post)
+    response_data = {}
+    data = json.loads(request.body)
+    try:
+        form = LoginForm(data)
         if form.is_valid:
-            email = post['email']
-            password = post['password']
+            email = data.get('email',None)
+            password = data.get('password',None)
             user = authenticate(username=email, email=email, password=password)
             if user is not None:
-                login(request,user)
-                data['status'] = 'logged in'
-                return JsonResponse(data)
+                login(request, user)
+                response_data['status'] = 'logged in'
+                return JsonResponse(response_data)
             else:
-                data['error'] = True
-                data['status'] = 'Form Not Validated'
-                return JsonResponse(data)
-
-    else:
-        data['status'] = ' Request for login'
-        return JsonResponse(data)
-
+                response_data['error'] = True
+                response_data['status'] = 'Invalid Credentials!'
+                return JsonResponse(response_data)
+    except:
+        response_data['error'] = True
+        response_data['status'] = "Please Fill the form correctly!"
 
 @login_required(login_url='/login') #not /login/
 def LogoutView(request):
