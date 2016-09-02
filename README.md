@@ -1,7 +1,7 @@
 # Api Documentation
 ## Registration Api
 <br><br>
-Url: http://localhost:8000/register
+Url: http://technex-ca.herokuapp.com/register
 <br>
 Method: POST
 <br>
@@ -20,13 +20,13 @@ Json Response for Successful registration:<br>
 								{<br>
 								 	"status" : "Profile created successfully"<br>
 								}<br><br>
-								 
+
 Json Response for Error in Registration(validation Erorr):<br>
 								{<br>
 									"status" : "Registration in error",<br>
 									"field_name": errorInField //field_name is same as above expected<br>
 								}<br><br>
-								 	
+
 Json Response for Invalid Request(requests other than post):<br>
 								{<br>
 									"Error" : True,<br>
@@ -35,7 +35,7 @@ Json Response for Invalid Request(requests other than post):<br>
 
 ## Login Api
 <br><br>
-Url: http://localhost:8000/login
+Url: http://technex-ca.herokuapp.com/login
 <br>
 Method: POST
 <br>
