@@ -30,35 +30,36 @@ def RegisterView(request):
     template_name = 'technexuser/registration.html'
     response_data = {}
     data = json.loads(request.body)
-    try:
-        form = RegisterForm(data)
-        email = data.get('email',None)
-        user = User.objects.create_user(username=email, email=email)
-        user.first_name = data.get('first_name',None)
-        user.last_name = data.get('last_name',None)
-        password = data.get('password',None)
-        user.set_password(password)
-        user.save()
+    if request.method == 'POST':
+        try:
+            form = RegisterForm(data)
+            email = data.get('email',None)
+            user = User.objects.create_user(username=email, email=email)
+            user.first_name = data.get('first_name',None)
+            user.last_name = data.get('last_name',None)
+            password = data.get('password',None)
+            user.set_password(password)
+            user.save()
 
-        techprofile = form.save(commit=False)
-        techprofile.user = user
-        techprofile.save()
+            techprofile = form.save(commit=False)
+            techprofile.user = user
+            techprofile.save()
 
-        status = UserStatus.objects.create(user=user,is_techuser=True)
+            status = UserStatus.objects.create(user=user,is_techuser=True)
 
-        new_user = authenticate(username=email, password=password)
-        login(request, new_user)
+            new_user = authenticate(username=email, password=password)
+            login(request, new_user)
 
-        response_data['status'] = "Profile created successfully"
-        return JsonResponse(response_data)
-    except:
+            response_data['status'] = "Profile created successfully"
+            return JsonResponse(response_data)
+        except:
 
-        form = RegisterForm(data)
-        for field in form:
-            if field.errors:
-                response_data[field.html_name] = field.errors.as_text()
-                response_data['status'] = 'Error in registration'
-        return JsonResponse(response_data)
+            form = RegisterForm(data)
+            for field in form:
+                if field.errors:
+                    response_data[field.html_name] = field.errors.as_text()
+                    response_data['status'] = 'Error in registration'
+            return JsonResponse(response_data)
 
     else:
         response_data['error'] = True
