@@ -29,7 +29,7 @@ def IndexView(request):
 def RegisterView(request):
     template_name = 'technexuser/registration.html'
     response_data = {}
-    data =json.loads(request.body)
+    data = json.loads(request.body)
     try:
         form = RegisterForm(data)
         email = data.get('email',None)
@@ -52,6 +52,7 @@ def RegisterView(request):
         response_data['status'] = "Profile created successfully"
         return JsonResponse(response_data)
     except:
+
         form = RegisterForm(data)
         for field in form:
             if field.errors:
