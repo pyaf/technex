@@ -14,7 +14,7 @@ class UserStatusInline(admin.StackedInline):
 class UserAdmin(UserAdmin):
 
     def name(obj):
-        return "%s %s" % (obj.first_name, obj.last_name)
+        return "%s %s" % (obj.user.first_name, obj.user.last_name)
 
 
     def college(obj):
@@ -49,7 +49,7 @@ class MassNotificationAdmin(admin.ModelAdmin):
 class UserNotificationAdmin(admin.ModelAdmin):
 
     def name(obj):
-        return "%s %s" % (obj.first_name, obj.last_name)
+        return "%s %s" % (obj.user.first_name, obj.user.last_name)
 
     name.short_description = 'Name'
     list_display = [name,'message','mark_read']

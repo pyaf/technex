@@ -81,7 +81,7 @@ def ProfileCreateView(request):
             caprofile.user.first_name = request.POST['first_name']
             caprofile.user.last_name = request.POST['last_name']
             caprofile.save()
-            #first save the caprofile then update the UserStatus.
+            caprofile.user.save() #in order to save the first_name and last_name of current user.
             status = UserStatus.objects.get_or_create(user=request.user)[0]
             status.is_ca = True
             status.save()
