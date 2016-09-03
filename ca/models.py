@@ -71,7 +71,7 @@ class UserNotification(models.Model):
 #primary_key=True implies null=False and unique=True.
 #Only one primary key is allowed on an object.
 def get_user_image_folder(instance, filename):
-    return "%s-%s-%s/%s" %(instance.user.first_name,instance.user.last_name,instance.user.caprofile.college, filename)
+    return "CAs/%s-%s-%s/%s" %(instance.user.first_name,instance.user.last_name,instance.user.caprofile.college, filename)
 #You don't have to use request in Models, you use instance instead.
 
 class Poster(models.Model):

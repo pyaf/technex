@@ -19,14 +19,15 @@ from TechnexUser.models import *
 
 def context_call(request):
     college = request.user.caprofile.college
+    ca_college_profile = CAProfile.objects.filter(college=college) #AWESOMMMMMENESS AMPLIFIED :D
     context = {
-            # 'college_count' : User.techprofile.filter(college=college).count(),
+            'college_count' : User.objects.filter(caprofile=ca_college_profile).count(),
             'userprofile' : request.user.caprofile,
             'all_msgs': request.user.massnotification_set.all,
             'user_msgs': request.user.usernotification_set.filter(mark_read=False),
             'poster_count': request.user.poster_set.count(),
             'form' : ImageUploadForm(),
-            # 'technexuser' : User.techprofile.filter(college=college),
+            'techprofiles' : TechProfile.objects.filter(college=college),
             'posters' : Poster.objects.filter(user=request.user),
         }
     return context

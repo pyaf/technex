@@ -66,30 +66,38 @@ a {
     <div id="userlist" class="panel-collapse collapse">
     <div class="container-fluid">
       <br>
-    {% for user in technexuser %}
+    {% for techprofile in techprofiles %}
       <div class="panel-group" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion" href="#{{user.name}}">
-                {{user.name}}</a>
+              <a data-toggle="collapse" data-parent="#accordion" href="#{{techprofile.user.first_name}}">
+                {{techprofile.user.first_name}} {{techprofile.user.last_name}}</a>
               </h4>
             </div>
 
-            <div id="{{user.name}}" class="panel-collapse collapse">
+            <div id="{{techprofile.user.first_name}}" class="panel-collapse collapse">
               <div class="panel-body">
-                <table class="table  table-hover tabel-responsive">
+                <table class="table tabel-responsive">
+
+                  <td>Full name :</td>
+                  <td>{{techprofile.user.first_name}} {{techprofile.user.last_name}}</td>
+                </tr>
                   <td>Year :</td>
-                  <td>{{user.year}}</td>
+                  <td>{{techprofile.year}}</td>
                 </tr>
                 <tr>
                   <td>Mobile Number :</td>
-                  <td>{{user.mobile_number}}</td>
+                  <td>{{techprofile.mobile_number}}</td>
                 </tr>
                 <tr>
-                  <td>WhatsApp Number :</td>
-                  <td>{{user.whatsapp_number}}</td>
+                  <td>Profile Photo :</td>
+                  <td><img src="/ca/media/{{techprofile.profile_photo}}" class="img-rounded" alt="Cinque Terre" width="304" height="236">
+                    </td>
                 </tr>
+                <td>Events :</td>
+                <td>Comming Soon!</td>
+              </tr>
               </table>
             </div>
           </div>

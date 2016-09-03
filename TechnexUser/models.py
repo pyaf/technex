@@ -5,7 +5,7 @@ from ca.models import year_choices
 
 
 def get_user_image_folder(instance, filename):
-    return "technexuser/%s/%s" %(instance.user.caprofile.first_name, filename)
+    return "technexusers/%s-%s/%s" %(instance.user.first_name,instance.user.last_name, filename)
 
 class UserStatus(models.Model):
     user = models.OneToOneField(User)
