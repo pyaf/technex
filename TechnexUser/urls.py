@@ -8,6 +8,12 @@ app_name='technexuser'
 
 urlpatterns = [
 
+	#JsonResponse
+	url(r'^api/login$', ApiLoginView, name= 'api_login'),
+	#JsonResponse
+	url(r'^api/register/$', ApiRegisterView,name='api_register'),
+
+	#HttpResponse
 	url(r'^$', IndexView, name= 'index'),
 
 	url(r'^login$', LoginView, name= 'login'),
@@ -16,6 +22,6 @@ urlpatterns = [
 
 	url(r'^dashboard/$', DashboardView,name='dashboard'),
 
-	url(r'^logout/$', LogoutView, name='logout')
+	url(r'^logout/$', LogoutView, name='logout'),
 
 ]

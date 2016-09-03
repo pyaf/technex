@@ -15,17 +15,18 @@ import json
 
 from ca.models import *
 from ca.forms import ImageUploadForm, ProfileCreationForm
+from TechnexUser.models import *
 
 def context_call(request):
     college = request.user.caprofile.college
     context = {
-            'college_count' : TechnexUser.objects.filter(college=college).count(),
+            # 'college_count' : User.techprofile.filter(college=college).count(),
             'userprofile' : request.user.caprofile,
             'all_msgs': request.user.massnotification_set.all,
             'user_msgs': request.user.usernotification_set.filter(mark_read=False),
             'poster_count': request.user.poster_set.count(),
             'form' : ImageUploadForm(),
-            'technexuser' : TechnexUser.objects.filter(college=college),
+            # 'technexuser' : User.techprofile.filter(college=college),
             'posters' : Poster.objects.filter(user=request.user),
         }
     return context
@@ -54,23 +55,23 @@ class IndexView(generic.View):
         template_name = 'ca/index.html'
         return render(request, template_name, {})
 
-@login_required(login_url='/ca/')
+@login_required(login_url='/login')
 def DashboardView(request):
     template_name = 'ca/dashboard.html'
     try:
-        profile_done = request.user.caprofile.profile_completed
+        profile_done = request.user.userstatus.is_ca
         context = context_call(request)
+        return render(request,template_name,context)
     except:
         return redirect('/ca/profile_registration')
-    else:
-        return render(request,template_name,context)
-        # return redirect('/ca/profile_registration')
 
-@login_required(login_url = "/ca/")
+@login_required(login_url = "/login")
 def ProfileCreateView(request):
+
     profile_context = {
-            'form': ProfileCreationForm()
+            'form': ProfileCreationForm(),
     }
+
     template_name = 'ca/profile_registration.html'
     if request.method == 'POST':
         form = ProfileCreationForm(request.POST)
@@ -79,22 +80,42 @@ def ProfileCreateView(request):
             caprofile.user = request.user
             caprofile.user.first_name = request.POST['first_name']
             caprofile.user.last_name = request.POST['last_name']
-            caprofile.profile_completed = True
             caprofile.save()
+            #first save the caprofile then update the UserStatus.
+            status = UserStatus.objects.get_or_create(user=request.user)[0]
+            status.is_ca = True
+            status.save()
+
             messages.success(request, 'Profile set successfully.',fail_silently=True)
             return redirect('/ca/dashboard/')
 
         else:
             return render(request,template_name,{'form':form})
-    else:
-        try:
-            profile_done = request.user.caprofile.profile_completed
-            messages.warning(request, 'You have already created your profile.',fail_silently=True)
-            return redirect('/ca/dashboard')
-        except:
-            return render(request, template_name, profile_context)
 
-@login_required(login_url = "/ca/")
+        '''
+User is registered and currently logged in. If User is registered by allauth(ca/register) then
+UserStatus obj hasn't been created yet. if User was created at technexUser then userstatus object is created
+with is_techuser = True.
+
+        '''
+
+    else:
+        status, created_right_now = UserStatus.objects.get_or_create(user=request.user)
+
+        if not created_right_now: # allready created userstatus
+
+            if status.is_ca: # user has already created caprofile at ca portal.
+                messages.warning(request, 'You have already created your profile.',fail_silently=True)
+                return redirect('/ca/dashboard')
+
+            else: #A techuser wants to be CA. serve the ca profile form.
+                return render(request,template_name,profile_context)
+
+        else: #ca has just registered on ca portal through allauth, serve the caprofile form.
+            return render(request,template_name,profile_context)
+
+
+@login_required(login_url = "/login")
 def PosterUploadView(request):
     template_name = 'ca/poster_form.html'
     context = context_call(request)
@@ -112,32 +133,36 @@ def PosterUploadView(request):
     else:
         return render(request,template_name,context)
 
-@login_required(login_url = "/ca/")
+@login_required(login_url = "/login")
 def AllPosterView(request):
     template_name = 'ca/all_posters.html'
     context = context_call(request)
     return render(request,template_name, context)
 
-@login_required(login_url = "/ca/")
+
+@login_required(login_url = "/login")
 def NotificationsView(request):
     template_name = 'ca/notifications.html'
     context = context_call(request)
     return render(request, template_name, context)
 #{{ request.user.massnotification_set.count|add:request.user.usernotification_set.count}}
 
-@login_required(login_url = "/ca/")
+
+@login_required(login_url = "/login")
 def AccountDetailView(request):
     template_name = 'ca/settings.html'
     context = context_call(request)
     return render(request, template_name, context)
 
-@login_required(login_url = "/ca/")
+
+@login_required(login_url = "/login")
 def ToDoListView(request):
     template_name = 'ca/to_do_list.html'
     context = context_call(request)
     return render(request,template_name,context)
 
-@login_required(login_url='/ca/')
+
+@login_required(login_url='/login')
 def UpcomingEventsView(request):
     template_name = 'ca/upcoming_events.html'
     context = context_call(request)

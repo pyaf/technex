@@ -10,6 +10,12 @@
 
       </div>
       <div class="col-md-6 columns">
+        {% if error_msg %}
+        <div class="alert alert-danger">
+    <strong>{{error_msg}}</strong>
+  </div>
+  {% endif %}
+  <br>
         <form class="" action="" method="post">
           {% csrf_token %}
           {% for field in form %}
@@ -20,8 +26,16 @@
           {{field.errors}}
           </div>
           {% endfor %}
-          <button type="submit" class="btn btn-primary" name="button">Get Started</button>
+          <button type="submit" class="btn btn-primary" name="button">Login</button>
+          <a class="btn btn-link" href="{% url 'account_reset_password' %}">Forgot Password?</a>
         </form>
+<br>
+      <div class="social-login-buttons">
+        <a class="btn btn-primary" href="/account/facebook/login/?process=login">
+          <i class="fa fa-facebook"></i> Facebook
+        </a>
+      </div>
+      <br>
       </div>
     </div>
   </div>

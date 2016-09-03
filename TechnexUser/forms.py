@@ -32,7 +32,7 @@ class RegisterForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
-    email = forms.CharField(label="email", max_length=30,
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Email','required':'true', 'name': 'email'}))
-    password = forms.CharField(label="Password", max_length=30,
-                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Password','required':'true', 'name': 'password'}))
+    email = forms.CharField(label="email",
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Email','required':'true', 'type':'text','name': 'email'}))
+    password = forms.CharField(label="Password",
+                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Password','required':'true', 'type':'password','name': 'password'}))

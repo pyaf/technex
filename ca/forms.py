@@ -42,7 +42,7 @@ class ProfileCreationForm(forms.ModelForm):
 
     class Meta:
         model = CAProfile
-        exclude = ['user_id','user','profile_completed']
+        exclude = ['user_id','user','profile_photo']
 
 # class ProfileCreationForm(forms.ModelForm):
 #

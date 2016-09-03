@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import URLValidator
+
 # from django.core.validators import MaxValueValidator
 
 year_choices = [
@@ -13,9 +15,8 @@ year_choices = [
         (4, 'Fourth'),
         (5,'Fifth'),
     ]
-class CAProfile(models.Model):
 
-    # allauth_app_settings.USER_MODEL = auth.User
+class CAProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     year = models.IntegerField(choices=year_choices)
     mobile_number = models.BigIntegerField()
@@ -24,12 +25,12 @@ class CAProfile(models.Model):
     college_address = models.TextField()
     postal_address = models.TextField()
     pincode = models.PositiveIntegerField()
-    profile_completed = models.BooleanField(default=False)
+    profile_photo = models.TextField(validators=[URLValidator()],blank=True)
 
     def __unicode__(self):
         return '%s-%s' %(self.college, self.user)
-'''use BigIntegerField for postgresql'''
-'''for sqlite3 etc. use IntegerField(validators=[MaxValueValidator(9999999999)])'''
+
+
 # @receiver(post_save, sender=User)
 # def create_profile(sender,created, instance, **kwargs):
 #     if created:
@@ -64,6 +65,7 @@ class UserNotification(models.Model):
 
     def __unicode__(self):
         return self.message
+
 #request.user.usernotification_set.all()
 
 #primary_key=True implies null=False and unique=True.
@@ -78,14 +80,3 @@ class Poster(models.Model):
 
     def __unicode__(self):
         return '%s' % self.poster
-
-
-class TechnexUser(models.Model):
-    name = models.CharField(max_length=100)
-    college = models.CharField(max_length = 250)
-    year = models.IntegerField(choices=year_choices)
-    mobile_number = models.IntegerField()
-    whatsapp_number = models.IntegerField()
-
-    def __unicode__(self):
-        return '%s-%s' %(self.name, self.college)
