@@ -9,7 +9,7 @@
 {% endblock %}
 {% block extra_link %}
   <li>
-      <a href="/dashboard/"><i class="fa fa-th"></i> Dashboard</a>
+      <a href="/ca/dashboard/"><i class="fa fa-th"></i> Dashboard</a>
   </li>
 {% endblock %}
 {% block content %}
@@ -39,35 +39,35 @@
               <table class="table table-hover tabel-responsive">
                   <tr>
                     <td>Name :</td>
-                    <td>{{userprofile.name}}</td>
+                    <td>{{request.user.first_name}} {{request.user.last_name}}</td>
                   </tr>
                   <tr>
                     <td>Year :</td>
-                    <td>{{userprofile.year}}</td>
+                    <td>{{caprofile.year}}</td>
                   </tr>
                   <tr>
                     <td>College :</td>
-                    <td>{{userprofile.college}}</td>
+                    <td>{{caprofile.college}}</td>
                   </tr>
                   <tr>
                     <td>Mobile Number :</td>
-                    <td>{{userprofile.mobile_number}}</td>
+                    <td>{{caprofile.mobile_number}}</td>
                   </tr>
                   <tr>
                     <td>WhatsApp Number :</td>
-                    <td>{{userprofile.whatsapp_number}}</td>
+                    <td>{{caprofile.whatsapp_number}}</td>
                   </tr>
                   <tr>
                     <td>College Address :</td>
-                    <td>{{userprofile.college_address}}</td>
+                    <td>{{caprofile.college_address}}</td>
                   </tr>
                   <tr>
                     <td>Postal Address :</td>
-                    <td>{{userprofile.postal_address}}</td>
+                    <td>{{caprofile.postal_address}}</td>
                   </tr>
                   <tr>
                     <td>Pincode :</td>
-                    <td>{{userprofile.pincode}}</td>
+                    <td>{{caprofile.pincode}}</td>
                   </tr>
               </table>
           </div>

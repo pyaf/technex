@@ -21,8 +21,8 @@ def context_call(request):
     college = request.user.caprofile.college
     ca_college_profile = CAProfile.objects.filter(college=college) #AWESOMMMMMENESS AMPLIFIED :D
     context = {
-            'college_count' : User.objects.filter(caprofile=ca_college_profile).count(),
-            'userprofile' : request.user.caprofile,
+            'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
+            'caprofile' : request.user.caprofile,
             'all_msgs': request.user.massnotification_set.all,
             'user_msgs': request.user.usernotification_set.filter(mark_read=False),
             'poster_count': request.user.poster_set.count(),

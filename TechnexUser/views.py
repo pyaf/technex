@@ -87,9 +87,14 @@ def LogoutView(request):
 
 @login_required(login_url='/login')
 def DashboardView(request):
-    template_name = 'technexuser/dashboard.html'
-    context = context_call(request)
-    return render(request,template_name,context)
+    status = request.user.userstatus
+    if status.is_techuser == True:
+        template_name = 'technexuser/dashboard.html'
+        context = context_call(request)
+        return render(request,template_name,context)
+    else:
+        #the user hasn't registered for technex.
+        return redirect('/register')
 
 
 @csrf_exempt

@@ -45,7 +45,7 @@
                             <a class=" dropdown-toggle" href=""  data-toggle="dropdown"><i class="fa fa-bell"></i>
                               Notifications
                               {% if user_msgs.count != 0 %}
-                              <span class="badge" id="badge_count" value="{{user_msgs.count}}">{{user_msgs.count}}</span>
+                              <span class="badge badge-own" id="badge_count" value="{{user_msgs.count}}">{{user_msgs.count}}</span>
                               {% endif %}</a>
                               <ul class="dropdown-menu list-group">
                                 {% if all_msgs or user_msgs %}
