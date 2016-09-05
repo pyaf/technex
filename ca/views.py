@@ -10,19 +10,26 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login, logout
 
 import json
 
 from ca.models import *
-from ca.forms import ImageUploadForm, ProfileCreationForm
+from ca.forms import *
 from TechnexUser.models import *
 
 def context_call(request):
     college = request.user.caprofile.college
-    ca_college_profile = CAProfile.objects.filter(college=college) #AWESOMMMMMENESS AMPLIFIED :D
+    ca_college_profile = CAProfile.objects.filter(college=college) #for showing other CAs of one's college.
+
+    try:#will raise an error in first time visit of CA to the dashborad
+        caprofile = request.user.caprofile
+    except:
+        caprofile = None
+
     context = {
             'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
-            'caprofile' : request.user.caprofile,
+            'caprofile' : caprofile,
             'all_msgs': request.user.massnotification_set.all,
             'user_msgs': request.user.usernotification_set.filter(mark_read=False),
             'poster_count': request.user.poster_set.count(),
@@ -56,6 +63,49 @@ class IndexView(generic.View):
         template_name = 'ca/index.html'
         return render(request, template_name, {})
 
+
+def CARegistrationView(request):
+    template_name = 'ca/CARegistration.html'
+    if request.method == "POST":
+        form = CARegistrationForm(request.POST)
+        if form.is_valid:
+            email = request.POST['email']
+            password1 = request.POST['password1']
+            password2 = request.POST['password2']
+            if password1 == password2:
+                try:
+                    allready_a_user = User.objects.get(username=email)
+                except:# unique user.
+                    allready_a_user = False
+
+                if not allready_a_user:
+                    user = User.objects.create_user(username=email,email=email)
+                    user.set_password(password1)
+                    user.save()
+
+                    status = UserStatus.objects.create(user=user)
+                    #CA by default is to be made ca and techuser.
+                    #we will make is_ca and is_techuser after ca profile creation
+                    new_user = authenticate(username=email,password=password1)
+                    login(request,new_user)
+
+                    return redirect('/ca/profile_registration')
+
+                else:# already a user.
+                    messages.warning(request,'user allready registered with this email!',fail_silently=True)
+                    return render(request,template_name,{'form':form})
+
+            else: #password mismatch
+                messages.warning(request,"Passwords didn't match")
+                return render(request,template_name,{'form':form})
+        else: #form isn't valid
+            return render(request,template_name,{'form':form})
+
+    else: #not a post request
+        form = CARegistrationForm()
+        return render(request,template_name,{'form':form})
+
+
 @login_required(login_url='/login')
 def DashboardView(request):
     template_name = 'ca/dashboard.html'
@@ -85,7 +135,9 @@ def ProfileCreateView(request):
             caprofile.user.save() #in order to save the first_name and last_name of current user.
             status = UserStatus.objects.get_or_create(user=request.user)[0]
             status.is_ca = True
+            status.is_techuser = True
             status.save()
+
 
             messages.success(request, 'Profile set successfully.',fail_silently=True)
             return redirect('/ca/dashboard/')
@@ -93,27 +145,26 @@ def ProfileCreateView(request):
         else:
             return render(request,template_name,{'form':form})
 
-        '''
-User is registered and currently logged in. If User is registered by allauth(ca/register) then
-UserStatus obj hasn't been created yet. if User was created at technexUser then userstatus object is created
-with is_techuser = True.
 
-        '''
+            # User is registered and currently logged in. If User is registered by allauth(ca/register) then
+            # UserStatus obj hasn't been created yet. if User was created at technexUser then userstatus
+            # object is created with is_techuser = True.
 
+#remember login is neccesary for this view. so we have request.user
     else:
-        status, created_right_now = UserStatus.objects.get_or_create(user=request.user)
+        try:
+            status = UserStatus.objects.get(user=request.user)
+            allready_a_user = True
+        except:
+            allready_a_user = False
 
-        if not created_right_now: # allready created userstatus
-
-            if status.is_ca: # user has already created caprofile at ca portal.
+        if allready_a_user:
+            if status.is_ca:#profile created
                 messages.warning(request, 'You have already created your profile.',fail_silently=True)
                 return redirect('/ca/dashboard')
 
-            else: #A techuser wants to be CA. serve the ca profile form.
+            else: #not is_ca,..serve the caprofile creation form.
                 return render(request,template_name,profile_context)
-
-        else: #ca has just registered on ca portal through allauth, serve the caprofile form.
-            return render(request,template_name,profile_context)
 
 
 @login_required(login_url = "/login")

@@ -2,7 +2,7 @@
 
 # Api Documentation
 ## Registration Api
-<br><br>
+<br> <br>
 Url: http://technex-ca.herokuapp.com/api/register
 <br>
 Method: POST

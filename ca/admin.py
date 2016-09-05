@@ -18,23 +18,34 @@ class UserAdmin(UserAdmin):
 
 
     def college(obj):
-        if obj.userstatus.is_ca == True:
-            return "%s" % obj.caprofile.college
-        else:
-            return "%s" % obj.techprofile.college
-
+        try:
+            if obj.userstatus.is_ca == True:
+                return "%s" % obj.caprofile.college
+            else:
+                return "%s" % obj.techprofile.college
+        except:
+            return "No college"
 
     def mobile_number(obj):
-        if obj.userstatus.is_ca == True:
-            return "%s" % obj.caprofile.mobile_number
-        else:
-            return "%s" % obj.techprofile.mobile_number
+        try:
+            if obj.userstatus.is_ca == True:
+                return "%s" % obj.caprofile.mobile_number
+            else:
+                return "%s" % obj.techprofile.mobile_number
+        except:
+            return "None"
 
     def CA(obj):
-        return "%s" %obj.userstatus.is_ca
+        try:
+            return "%s" %obj.userstatus.is_ca
+        except:
+            return "None"
 
     def TechUser(obj):
-        return "%s" %obj.userstatus.is_techuser
+        try:
+            return "%s" %obj.userstatus.is_techuser
+        except:
+            return "None"
 
     name.short_description = 'Name'
     college.short_description = 'College'

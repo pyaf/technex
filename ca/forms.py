@@ -11,6 +11,24 @@ class ImageUploadForm(forms.ModelForm):
         model = Poster
         fields = ['poster']
 
+class CARegistrationForm(forms.ModelForm):
+
+    email = forms.EmailField(label="Email",widget=forms.TextInput(attrs={'class':'form-control',
+                                                                         'required':'true','placeholder':'Email'}))
+
+    password1 = forms.CharField(label="Password",
+                               widget=forms.TextInput(attrs={'class': 'form-control',
+                                'required':'true','type':'password', 'placeholder':'Password', 'name': 'password1'}))
+
+    password2 = forms.CharField(label="Password",
+                               widget=forms.TextInput(attrs={'class': 'form-control',
+                               'required':'true','type':'password', 'placeholder':'Password (again)', 'name': 'password2'}))
+
+    class Meta:
+        model = User
+        fields = ['email','password1','password2']
+        exclude = ['username','first_name','last_name']
+
 class ProfileCreationForm(forms.ModelForm):
 
     first_name = forms.CharField(label="First Name",
@@ -25,10 +43,10 @@ class ProfileCreationForm(forms.ModelForm):
                                widget=forms.TextInput(attrs={'class': 'form-control','type':'text', 'placeholder':"College"}))
 
     mobile_number = forms.IntegerField(label="Mobile Number",
-                               widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'placeholder':"Mobile Number"}))
+                               widget=forms.TextInput(attrs={'class': 'form-control','type':'text', 'placeholder':"Mobile Number"}))
 
     whatsapp_number = forms.IntegerField(label="WhatsApp Number",
-                               widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'placeholder':"WhatsApp Number"}))
+                               widget=forms.TextInput(attrs={'class': 'form-control','type':'text', 'placeholder':"WhatsApp Number"}))
 
     college_address = forms.CharField(label="College Address",
                                widget=forms.Textarea(attrs={'class': 'form-control','type':'textarea', 'rows': '5','placeholder':"College Address"}))

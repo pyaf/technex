@@ -10,12 +10,14 @@
 
       </div>
       <div class="col-md-6 columns">
-        {% if error_msg %}
-        <div class="alert alert-danger">
-    <strong>{{error_msg}}</strong>
-  </div>
-  {% endif %}
-  <br>
+        {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-danger">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{msg.message}}
+          </div>
+        {% endfor %}
+        {% endif %}
         <form class="" action="" method="post">
           {% csrf_token %}
           {% for field in form %}

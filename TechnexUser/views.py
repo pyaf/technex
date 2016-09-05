@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 from TechnexUser.models import TechProfile, UserStatus
-from TechnexUser.forms import LoginForm, RegisterForm
+from TechnexUser.forms import *
 
 #json.loads will load a json object into a python dict,
 # json.dumps will dump a python dict to a json object,
@@ -19,6 +19,45 @@ def context_call(request):
         'name':request.user.first_name + " " + request.user.last_name,
     }
     return context
+
+def FbView(request):
+
+    '''
+    User comming here are already authenticated by fb: either first time login,
+    or logging into their technex account with fb.
+    Right now we have User instance only, with first/last name, email.
+    '''
+    if request.method == "POST":
+        #user has submitted the techprofile form. i.e, after fb login and getting FbForm()
+        form = FbForm(request.POST)
+        if form.is_valid:
+            techuser = form.save(commit=False)
+            techuser.user = request.user
+            techuser.save()
+
+            status = UserStatus.objects.create(user=request.user)
+            status.is_techuser = True
+            status.save()
+
+            return redirect('/dashboard')
+    else:#came here either first time or just loggin in with FB.
+        if request.user.is_authenticated:#obviously if came here after FB
+            try:
+                fb_user = UserStatus.objects.get(user=request.user)
+                allready_a_user = True
+            except:
+                allready_a_user = False
+            print allready_a_user
+            if not allready_a_user: #first time.
+                form = FbForm()
+                template_name = 'technexuser/fbregister.html'
+                return render(request,template_name,{'form':form})
+            else:#trying to log in..userstatus already there..
+            #the user is already logged in,.redirect to dashboard.
+                return redirect('/dashboard')
+        else:#anonymous user..
+            raise Http404('Not allowed!')
+
 
 def IndexView(request):
     template_name = 'technexuser/index.html'
@@ -32,23 +71,33 @@ def RegisterView(request):
         post = request.POST
         if form.is_valid:
             email = post['email']
-            user = User.objects.create_user(username=email, email=email)
-            user.first_name = post['first_name']
-            user.last_name = post['last_name']
-            password = post['password']
-            user.set_password(password)
-            user.save()
 
-            techprofile = form.save(commit=False)
-            techprofile.user = user
-            techprofile.save()
+            try:
+                allready_a_user = User.objects.get(username=email)
+            except:
+                allready_a_user = None
 
-            status = UserStatus.objects.create(user=user,is_techuser=True)
+            if allready_a_user is None:
+                user = User.objects.create_user(username=email, email=email)
+                user.first_name = post['first_name']
+                user.last_name = post['last_name']
+                password = post['password']
+                user.set_password(password)
+                user.save()
 
-            new_user = authenticate(username=email, password=password)
-            login(request, new_user)
+                techprofile = form.save(commit=False)
+                techprofile.user = user
+                techprofile.save()
 
-            return redirect('/dashboard')
+                status = UserStatus.objects.create(user=user,is_techuser=True)
+
+                new_user = authenticate(username=email, password=password)
+                login(request, new_user)
+
+                return redirect('/dashboard')
+            else:#allready_a_user
+                messages.warning(request,'email allready registered! try diffrent email id.',fail_silently=True)
+                return render(request,template_name,{'form':form})
         else:
             return render(request,template_name,{'form':form})
     else:
@@ -74,7 +123,8 @@ def LoginView(request):
                 else:
                     return redirect('/ca/dashboard')
             else:
-                return render(request,template_name,{'form':form,'error_msg':'Invalid Credentials!'})
+                messages.error(request,'Invalid Credentials',fail_silently=True)
+                return render(request,template_name,{'form':form})
         else:
             return render(request,template_name,{'form':form})
     else:
@@ -87,7 +137,7 @@ def LogoutView(request):
 
 @login_required(login_url='/login')
 def DashboardView(request):
-    status = request.user.userstatus
+    status = request.user.userstatus #created at the time of techprofile registration.
     if status.is_techuser == True:
         template_name = 'technexuser/dashboard.html'
         context = context_call(request)

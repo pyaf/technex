@@ -20,9 +20,9 @@
                     {% block unauth %}
                     <div class="text-center">
                       <a class="btn btn-primary btn-lg" href="{% url 'technexuser:login' %}">Log In</a>
-                      <a class="btn btn-default " href="{% url 'technexuser:register' %}">Register</a>
+                      <a class="btn btn-default " href="{% url 'technexuser:register' %}">Sign Up</a>
                       <br><br>
-                      <a href="{% url 'ca:index' %}" class="btn link btn-default "> CA Portal</a>
+                      <a href="{% url 'ca:register' %}" class="btn link btn-default "> Register for CA </a>
 
                     </div>
                     {% endblock %}

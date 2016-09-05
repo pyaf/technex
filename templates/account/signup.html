@@ -21,6 +21,8 @@
 
     <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
       {% csrf_token %}
+      {{form.non_field_errors}}
+
       {% for field in form %}
       {{ field|add_class:"form-control" }} <br>
       {{field.errors}}
@@ -32,11 +34,6 @@
     </form>
     <br>
   </div>
-</div>
-<div class="social-login-buttons">
-  <a class="btn btn-primary" href="/account/facebook/login/?process=login">
-    <i class="fa fa-facebook"></i> Facebook
-  </a>
 </div>
 </div>
 

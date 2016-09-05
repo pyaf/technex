@@ -1,5 +1,6 @@
 import os
 import dj_database_url
+# from django.contrib.auth.models import User, models
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -144,7 +145,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/ca/dashboard/'
+LOGIN_REDIRECT_URL = '/fblogin'
 
 # ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/profile_registration/'
 # ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/profile_registration/'
@@ -158,3 +159,8 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_USERNAME_REQUIRED = False
+
+
+# Fix: username length is too small,email must be unique
+# User._meta.local_fields[1].__dict__['max_length'] = 75
+# User._meta.local_fields[4].__dict__['_unique'] = True

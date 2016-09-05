@@ -31,6 +31,23 @@ class RegisterForm(forms.ModelForm):
         exclude = ['user_id','user','profile_photo']
 
 
+class FbForm(forms.ModelForm):
+
+    year = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'required':'true','placeholder':'Year', }),choices=year_choices,)
+
+    college = forms.CharField(label="College",
+                               widget=forms.TextInput(attrs={'class': 'form-control','type':'text','required':'true', 'placeholder':"College"}))
+
+    mobile_number = forms.IntegerField(label="Mobile Number",
+                               widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'required':'true','placeholder':"Mobile Number"}))
+
+
+    class Meta:
+        model = TechProfile
+        fields = ['year','college','mobile_number']
+        exclude = ['user_id','user','profile_photo']
+
+
 class LoginForm(forms.Form):
     email = forms.CharField(label="email",
                                widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder':'Email','required':'true', 'type':'text','name': 'email'}))

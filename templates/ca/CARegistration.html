@@ -1,27 +1,25 @@
 {% extends 'technexuser/base.html'%}
 {%block intial_content%}
 <div class="jumbotron text-center">
-  <h1>Signup for Technex</h1>
+  <h2>Welcome to Technex CA portal</h2>
+  <h3>Register</h3>
 </div>
-
 <div class="content">
   <div class="container">
     <div class="row">
       <div class="col-md-3">
 
       </div>
-      <div class="col-md-6 ">
+      <div class="col-md-6 columns">
         {% if messages %}
         {% for msg in messages %}
             <div class="alert alert-danger">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">
-          &times;</a>
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{msg.message}}
-        </div>
+          </div>
         {% endfor %}
         {% endif %}
-  <br>
-        <form action="" method="post">
+        <form class="" action="" method="POST">
           {% csrf_token %}
           {% for field in form %}
           {{  form.non_field_errors }}
@@ -31,16 +29,10 @@
           {{field.errors}}
           </div>
           {% endfor %}
-          <button type="submit" class="btn btn-primary" name="button">Get Started</button>
+          <button type="submit" class="btn btn-primary" name="button">Sign Up</button>
+          <a class="btn btn-link" href="{% url 'account_reset_password' %}">Forgot Password?</a>
         </form>
 
-        <br>
-              <div class="social-login-buttons">
-                <a class="btn btn-primary" href="/account/facebook/login/?process=login">
-                  <i class="fa fa-facebook"></i> Facebook
-                </a>
-              </div>
-              <br>
       </div>
     </div>
   </div>
