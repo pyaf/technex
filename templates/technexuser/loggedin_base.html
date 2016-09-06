@@ -41,7 +41,11 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="menu nav navbar-nav pull-right list-inline">
-
+                      {% if request.user.userstatus.is_ca == False %}
+                        <li>
+                          <a class='btn btn-default' href="{% url 'technexuser:tech2ca' %}"> Become Technex CA</a>
+                        </li>
+                        {% endif %}
                           {% block extra_link %}
                             <li>
                                 <a href="#"><i class="fa fa-cog"></i> Settings</a>

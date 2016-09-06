@@ -20,6 +20,34 @@ def context_call(request):
     }
     return context
 
+#for techusers who want to be a CA.
+@login_required(login_url='/login')
+def Tech2CA(request):
+    template_name = 'technexuser/tech2ca.html'
+    u = request.user
+    if request.method == "POST":
+        form = Tech2CAForm(request.POST)
+        if form.is_valid:
+            caprofile = form.save(commit=False)
+            #saved WhatsApp,col add,postal add, pincode.
+            caprofile.user = u
+            caprofile.college = u.techprofile.college
+            caprofile.mobile_number = u.techprofile.mobile_number
+            caprofile.year = u.techprofile.year
+            caprofile.save()
+
+            u.userstatus.is_ca = True
+            return redirect('/ca/dashboard')
+
+    else:
+        ca = request.user.userstatus.is_ca
+        if not ca:
+            form = Tech2CAForm()
+            return render(request,template_name,{'form':form})
+        else:#already a CA.
+            raise Http404('Not allowed')
+
+
 def FbView(request):
 
     '''

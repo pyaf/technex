@@ -20,6 +20,8 @@ urlpatterns = [
 
 	url(r'^register/$', RegisterView, name='register'),
 
+	url(r'^tech2ca/$', Tech2CA, name='tech2ca'),
+
 	url(r'^fblogin/$', FbView, name='fblogin'),
 
 	url(r'^dashboard/$', DashboardView, name='dashboard'),

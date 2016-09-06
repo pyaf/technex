@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
 from TechnexUser.models import TechProfile
-from ca.models import year_choices
+from ca.models import year_choices, CAProfile
 
 class RegisterForm(forms.ModelForm):
     first_name = forms.CharField(label="first name",
@@ -46,6 +46,27 @@ class FbForm(forms.ModelForm):
         model = TechProfile
         fields = ['year','college','mobile_number']
         exclude = ['user_id','user','profile_photo']
+
+
+class Tech2CAForm(forms.ModelForm):
+    whatsapp_number = forms.IntegerField(label="WhatsApp Number",
+                               widget=forms.TextInput(attrs={'class': 'form-control','type':'text', 'placeholder':"WhatsApp Number"}))
+
+    college_address = forms.CharField(label="College Address",
+                               widget=forms.Textarea(attrs={'class': 'form-control','type':'textarea', 'rows': '5','placeholder':"College Address"}))
+
+    postal_address = forms.CharField(label="Postal Address",
+                               widget=forms.Textarea(attrs={'class': 'form-control','type':'textarea','rows': '5', 'placeholder':"Postal Address"}))
+
+    pincode = forms.IntegerField(label="Pincode",
+                               widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'placeholder':"Pincode"}))
+
+
+    class Meta:
+        model = CAProfile
+        fields = ['whatsapp_number','college_address','postal_address','pincode',]
+
+
 
 
 class LoginForm(forms.Form):

@@ -63,7 +63,6 @@ class IndexView(generic.View):
         template_name = 'ca/index.html'
         return render(request, template_name, {})
 
-
 def CARegistrationView(request):
     template_name = 'ca/CARegistration.html'
     if request.method == "POST":
@@ -105,7 +104,6 @@ def CARegistrationView(request):
         form = CARegistrationForm()
         return render(request,template_name,{'form':form})
 
-
 @login_required(login_url='/login')
 def DashboardView(request):
     template_name = 'ca/dashboard.html'
@@ -133,11 +131,11 @@ def ProfileCreateView(request):
             caprofile.user.last_name = request.POST['last_name']
             caprofile.save()
             caprofile.user.save() #in order to save the first_name and last_name of current user.
+
             status = UserStatus.objects.get_or_create(user=request.user)[0]
             status.is_ca = True
-            status.is_techuser = True
+            status.is_techuser = True#every CA has to be made a techuser by default
             status.save()
-
 
             messages.success(request, 'Profile set successfully.',fail_silently=True)
             return redirect('/ca/dashboard/')
@@ -150,7 +148,7 @@ def ProfileCreateView(request):
             # UserStatus obj hasn't been created yet. if User was created at technexUser then userstatus
             # object is created with is_techuser = True.
 
-#remember login is neccesary for this view. so we have request.user
+            #remember login is neccesary for this view. so we have request.user
     else:
         try:
             status = UserStatus.objects.get(user=request.user)
