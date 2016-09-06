@@ -25,8 +25,9 @@ def FbView(request):
     '''
     User comming here are already authenticated by fb: either first time login,
     or logging into their technex account with fb.
-    Right now we have User instance only, with first/last name, email.
+    for first time ppl,..we have User instance only with first/last name & email.
     '''
+
     if request.method == "POST":
         #user has submitted the techprofile form. i.e, after fb login and getting FbForm()
         form = FbForm(request.POST)
@@ -47,7 +48,7 @@ def FbView(request):
                 allready_a_user = True
             except:
                 allready_a_user = False
-            print allready_a_user
+
             if not allready_a_user: #first time.
                 form = FbForm()
                 template_name = 'technexuser/fbregister.html'
@@ -71,7 +72,6 @@ def RegisterView(request):
         post = request.POST
         if form.is_valid:
             email = post['email']
-
             try:
                 allready_a_user = User.objects.get(username=email)
             except:
