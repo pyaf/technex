@@ -1,8 +1,15 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
-from ca.models import year_choices
 from django.core.validators import URLValidator
+
+year_choices = [
+        (1, 'First'),
+        (2, 'Second'),
+        (3, 'Third'),
+        (4, 'Fourth'),
+        (5,'Fifth'),
+    ]
 
 
 def get_user_image_folder(instance, filename):
@@ -53,7 +60,7 @@ class Event(models.Model):
         return self.eventName
 
 class Team(models.Model):
-    teamName = models.CharField(max_length=50)
+    teamName = models.CharField(max_length=50, null=True, blank=True)
     teamId = models.AutoField(primary_key = True)
     event = models.ForeignKey(Event)
     teamLeader = models.ForeignKey(TechProfile,related_name = 'teamLeader')

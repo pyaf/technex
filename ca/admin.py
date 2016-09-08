@@ -19,11 +19,10 @@ class UserAdmin(UserAdmin):
 
     def college(obj):
         try:
-            if obj.userstatus.is_ca == True:
-                return "%s" % obj.caprofile.college
-            else:
-                return "%s" % obj.techprofile.college
-        except:
+            return "%s" % obj.caprofile.college
+        except:    
+            return "%s" % obj.techprofile.college
+        else:
             return "No college"
 
     def mobile_number(obj):

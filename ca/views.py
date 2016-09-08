@@ -22,7 +22,9 @@ def context_call(request):
     college = request.user.caprofile.college
     ca_college_profile = CAProfile.objects.filter(college=college) #for showing other CAs of one's college.
 
-    try:#will raise an error in first time visit of CA to the dashborad
+#will raise an error in first time visit of CA to the dashborad, when the User hasn't  created caprofile
+#using ProfileCreateView and trying to visit dashboard
+    try:
         caprofile = request.user.caprofile
     except:
         caprofile = None
@@ -30,12 +32,12 @@ def context_call(request):
     context = {
             'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
             'caprofile' : caprofile,
-            'all_msgs': request.user.massnotification_set.all,
-            'user_msgs': request.user.usernotification_set.filter(mark_read=False),
-            'poster_count': request.user.poster_set.count(),
+            'all_msgs': request.user.caprofile.massnotification_set.all,
+            'user_msgs': request.user.caprofile.usernotification_set.filter(mark_read=False),
+            'poster_count': request.user.caprofile.poster_set.count(),
             'form' : ImageUploadForm(),
             'techprofiles' : TechProfile.objects.filter(college=college),
-            'posters' : Poster.objects.filter(user=request.user),
+            'posters' : Poster.objects.filter(ca=request.user.caprofile),
 
         }
     return context
@@ -105,15 +107,6 @@ def CARegistrationView(request):
         form = CARegistrationForm()
         return render(request,template_name,{'form':form})
 
-@login_required(login_url='/login')
-def DashboardView(request):
-    template_name = 'ca/dashboard.html'
-    try:
-        profile_done = request.user.userstatus.is_ca
-        context = context_call(request)
-        return render(request,template_name,context)
-    except:
-        return redirect('/ca/profile_registration')
 
 @login_required(login_url = "/login")
 def ProfileCreateView(request):
@@ -125,16 +118,20 @@ def ProfileCreateView(request):
 
     template_name = 'ca/profile_registration.html'
     if request.method == 'POST':
+        post = request.POST
         form = ProfileCreationForm(request.POST)
         if form.is_valid():
             caprofile = form.save(commit=False)
             caprofile.user = request.user
-            caprofile.user.first_name = request.POST['first_name']
-            caprofile.user.last_name = request.POST['last_name']
-            caprofile.save()
+            caprofile.user.first_name = post['first_name']
+            caprofile.user.last_name = post['last_name']
             caprofile.user.save() #in order to save the first_name and last_name of current user.
+            college = College.objects.get(collegeName=post.get('college'))
+            caprofile.college = college
+            caprofile.save()
 
-            status = UserStatus.objects.get_or_create(user=request.user)[0]
+            #UserStatus is already created, as the user has signned in currently,.So it is a User n so has UserStatus
+            status = UserStatus.objects.get(user=request.user)
             status.is_ca = True
             status.is_techuser = True#every CA has to be made a techuser by default
             status.save()
@@ -154,11 +151,12 @@ def ProfileCreateView(request):
     else:
         try:
             status = UserStatus.objects.get(user=request.user)
-            already_a_user = True
+            #status is created at CA Signup,..is_ca n is_techuser is True only when Profile is created
+            already_a_User = True
         except:
-            already_a_user = False
+            already_a_User = False
 
-        if already_a_user:
+        if already_a_User:
             if status.is_ca:#profile created
                 messages.warning(request, 'You have already created your profile.',fail_silently=True)
                 return redirect('/ca/dashboard')
@@ -166,6 +164,23 @@ def ProfileCreateView(request):
             else: #not is_ca,..serve the caprofile creation form.
                 return render(request,template_name,context)
 
+
+'''
+IF THERE'S A LOOP OF BETWEEN DashboardView AND ProfileCreateView--> THE BUG May be IN context_call!!
+It might not raise an error and trigger the except in DashboardView-->ProfileCreateView-->>DashboardView and so on!!
+'''
+
+@login_required(login_url='/login')
+def DashboardView(request):
+    template_name = 'ca/dashboard.html'
+    try:
+        profile_done = request.user.userstatus.is_ca
+        context = context_call(request)
+        if profile_done:
+            print profile_done
+            return render(request,template_name,context)
+    except:
+        return redirect('/ca/profile_registration')
 
 @login_required(login_url = "/login")
 def PosterUploadView(request):

@@ -5,24 +5,16 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import URLValidator
-
 # from django.core.validators import MaxValueValidator
+from TechnexUser.models import College,year_choices
 
-year_choices = [
-        ('','Year of Study'),
-        (1, 'First'),
-        (2, 'Second'),
-        (3, 'Third'),
-        (4, 'Fourth'),
-        (5,'Fifth'),
-    ]
 
 class CAProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     year = models.IntegerField(choices=year_choices)
     mobile_number = models.BigIntegerField()
     whatsapp_number = models.BigIntegerField()
-    college = models.CharField(max_length=250)
+    college = models.ForeignKey(College,null = True)
     college_address = models.TextField()
     postal_address = models.TextField()
     pincode = models.PositiveIntegerField()
@@ -33,7 +25,7 @@ class CAProfile(models.Model):
 
 
 class MassNotification(models.Model):
-    user = models.ManyToManyField(CAProfile)
+    ca = models.ManyToManyField(CAProfile)
     mass_message = models.TextField()
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
     mark_read = models.ManyToManyField(User, related_name='mark_read')
@@ -46,7 +38,7 @@ class MassNotification(models.Model):
 
 
 class UserNotification(models.Model):
-    user = models.ForeignKey(CAProfile)
+    ca = models.ForeignKey(CAProfile)
     message = models.TextField()
     mark_read = models.BooleanField(default=False)
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
@@ -63,7 +55,7 @@ def get_user_image_folder(instance, filename):
 #You don't have to use request in Models, you use instance instead.
 
 class Poster(models.Model):
-    user = models.ForeignKey(CAProfile)
+    ca = models.ForeignKey(CAProfile)
     poster = models.ImageField(upload_to = get_user_image_folder)
 
     def __unicode__(self):

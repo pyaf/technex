@@ -15,8 +15,12 @@ from TechnexUser.forms import *
 # json.dumps will dump a python dict to a json object,
 
 def context_call(request):
+    try: #use try instead of if :)
+        name = request.user.first_name + " " + request.user.last_name
+    except:
+        name = None
     context = {
-        'name':request.user.first_name + " " + request.user.last_name,
+        'name':name,
     }
     return context
 
@@ -90,7 +94,8 @@ def FbView(request):
 
 def IndexView(request):
     template_name = 'technexuser/index.html'
-    return render(request,template_name,{})
+    context = context_call(request)
+    return render(request,template_name,context)
 
 
 def RegisterView(request):
@@ -114,8 +119,9 @@ def RegisterView(request):
                 user.set_password(password)
                 user.save()
 
+                college = College.objects.get(collegeName=post.get('college'))
                 techprofile = form.save(commit=False)
-                techprofile.college = post.get('college') #not rendered as model in form, #autocomplete
+                techprofile.college = college#not rendered as model in form, #autocomplete
                 techprofile.user = user
                 techprofile.save()
 

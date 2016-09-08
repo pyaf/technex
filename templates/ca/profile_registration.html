@@ -3,10 +3,9 @@
 
 {%block extra_css %}
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="/static/css/jquery-ui.css" type="text/css" media="all" />
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+
 {% endblock %}
 {% block navbar%}
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -31,7 +30,7 @@
         <form class="" action="" method="POST">
           {% csrf_token %}
           <div class="form-group">
-          <input class="form-control" type="text" id="clg"  required="true" placeholder="College"/>
+          <input class="form-control" type="text" id="clg" name="college"  required="true" placeholder="College"/>
         </div>
           {% for field in form %}
           {{  form.non_field_errors }}
@@ -52,10 +51,13 @@
 
 {% endblock %}
 {% block js %}
-
+<script src="/static/js/jquery-1.12.4.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/1.12.0jquery-ui.min.js"></script>
+<script src="/static/js/trianglify.min.js"></script>
+<script src="/static/js/base.js" charset="utf-8"></script>
 
 <script>
-
 
   $( function() {
     var availableTags = [
@@ -75,4 +77,5 @@
     });
   };
 </script>
+
 {% endblock %}
