@@ -1,4 +1,12 @@
 {% extends 'technexuser/base.html'%}
+{% block title %}
+<title>Signup</title>
+{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+{% endblock %}
 {%block intial_content%}
 <div class="jumbotron text-center">
   <h1>Signup for Technex</h1>
@@ -31,7 +39,11 @@
           {{field.errors}}
           </div>
           {% endfor %}
+          <div class="form-group">
+          <input class="form-control" type="text" id="clg"  required="true" placeholder="College"/>
+        </div>
           <button type="submit" class="btn btn-primary" name="button">Get Started</button>
+
         </form>
 
         <br>
@@ -46,4 +58,31 @@
   </div>
 </div>
 </div>
+
+
 {%endblock%}
+{%block js %}
+{%endblock%}
+{% block extra_js %}
+<script>
+
+
+  $( function() {
+    var availableTags = [
+      {% for clg in all_colleges %}
+          "{{clg}}",
+      {%endfor%}
+    ];
+    $( "#clg" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  // over write the default autocomplete function to match the option starting with term
+  $.ui.autocomplete.filter = function (array, term) {
+    var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+    return $.grep(array, function (value) {
+      return matcher.test(value.label || value.value || value);
+    });
+  };
+</script>
+{% endblock %}

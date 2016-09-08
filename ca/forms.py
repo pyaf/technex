@@ -39,8 +39,8 @@ class ProfileCreationForm(forms.ModelForm):
 
     year = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'placeholder':'Year', }),choices=year_choices,)
 
-    college = forms.CharField(label="College",
-                               widget=forms.TextInput(attrs={'class': 'form-control','type':'text', 'placeholder':"College"}))
+    # college = forms.CharField(label="College",
+    #                            widget=forms.TextInput(attrs={'class': 'form-control','type':'text', 'placeholder':"College"}))
 
     mobile_number = forms.IntegerField(label="Mobile Number",
                                widget=forms.TextInput(attrs={'class': 'form-control','type':'text', 'placeholder':"Mobile Number"}))
@@ -60,7 +60,7 @@ class ProfileCreationForm(forms.ModelForm):
 
     class Meta:
         model = CAProfile
-        exclude = ['user_id','user','profile_photo']
+        exclude = ['user_id','user','profile_photo','college']
 
 # class ProfileCreationForm(forms.ModelForm):
 #

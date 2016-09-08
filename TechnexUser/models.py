@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from ca.models import year_choices
+from django.core.validators import URLValidator
 
 
 def get_user_image_folder(instance, filename):
@@ -27,7 +28,7 @@ class TechProfile(models.Model):
     year = models.IntegerField(choices=year_choices)
     mobile_number = models.BigIntegerField()
     college = models.ForeignKey(College,null = True)
-    profile_photo = models.ImageField(upload_to = get_user_image_folder,default=None)
+    profile_photo = models.TextField(validators=[URLValidator()],blank=True)
 
     def __unicode__(self):
         return "%s %s-%s" %(self.user.first_name,self.user.last_name, self.college)
@@ -45,9 +46,18 @@ class Event(models.Model):
     parentEvent = models.ForeignKey(ParentEvent)
     description = models.TextField(null = True,blank = True)
     deadLine = models.DateTimeField(null = True,blank = True)
+    prizeMoney = models.IntegerField(null=True, blank=True)
+    maxMembers = models.IntegerField(null=True,blank=True)
+
+    def __unicode__(self):
+        return self.eventName
 
 class Team(models.Model):
+    teamName = models.CharField(max_length=50)
     teamId = models.AutoField(primary_key = True)
     event = models.ForeignKey(Event)
     teamLeader = models.ForeignKey(TechProfile,related_name = 'teamLeader')
     members = models.ManyToManyField(TechProfile,related_name = 'members')
+
+    def __unicode__(self):
+        return self.teamName

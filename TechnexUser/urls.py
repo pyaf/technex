@@ -13,10 +13,11 @@ urlpatterns = [
 	#JsonResponse
 	url(r'^api/register/$', ApiRegisterView, name='api_register'),
 
-	#HttpResponse
+	# url(r'^collegejson/$', CollegeSearch, name='api_register'),
+
 	url(r'^$', IndexView, name= 'index'),
 
-	url(r'^login$', LoginView, name= 'login'),
+	url(r'^login/$', LoginView, name= 'login'),
 
 	url(r'^register/$', RegisterView, name='register'),
 

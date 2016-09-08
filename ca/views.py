@@ -36,6 +36,7 @@ def context_call(request):
             'form' : ImageUploadForm(),
             'techprofiles' : TechProfile.objects.filter(college=college),
             'posters' : Poster.objects.filter(user=request.user),
+
         }
     return context
 
@@ -73,11 +74,11 @@ def CARegistrationView(request):
             password2 = request.POST['password2']
             if password1 == password2:
                 try:
-                    allready_a_user = User.objects.get(username=email)
+                    already_a_user = User.objects.get(username=email)
                 except:# unique user.
-                    allready_a_user = False
+                    already_a_user = False
 
-                if not allready_a_user:
+                if not already_a_user:
                     user = User.objects.create_user(username=email,email=email)
                     user.set_password(password1)
                     user.save()
@@ -91,7 +92,7 @@ def CARegistrationView(request):
                     return redirect('/ca/profile_registration')
 
                 else:# already a user.
-                    messages.warning(request,'user allready registered with this email!',fail_silently=True)
+                    messages.warning(request,'email already registered!, if you have already registered for Technex, the link of CA registration is at dashboard',fail_silently=True)
                     return render(request,template_name,{'form':form})
 
             else: #password mismatch
@@ -117,8 +118,9 @@ def DashboardView(request):
 @login_required(login_url = "/login")
 def ProfileCreateView(request):
 
-    profile_context = {
+    context = {
             'form': ProfileCreationForm(),
+            'all_colleges':College.objects.all(),
     }
 
     template_name = 'ca/profile_registration.html'
@@ -152,17 +154,17 @@ def ProfileCreateView(request):
     else:
         try:
             status = UserStatus.objects.get(user=request.user)
-            allready_a_user = True
+            already_a_user = True
         except:
-            allready_a_user = False
+            already_a_user = False
 
-        if allready_a_user:
+        if already_a_user:
             if status.is_ca:#profile created
                 messages.warning(request, 'You have already created your profile.',fail_silently=True)
                 return redirect('/ca/dashboard')
 
             else: #not is_ca,..serve the caprofile creation form.
-                return render(request,template_name,profile_context)
+                return render(request,template_name,context)
 
 
 @login_required(login_url = "/login")

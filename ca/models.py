@@ -9,6 +9,7 @@ from django.core.validators import URLValidator
 # from django.core.validators import MaxValueValidator
 
 year_choices = [
+        ('','Year of Study'),
         (1, 'First'),
         (2, 'Second'),
         (3, 'Third'),
@@ -31,21 +32,8 @@ class CAProfile(models.Model):
         return '%s-%s' %(self.college, self.user)
 
 
-# @receiver(post_save, sender=User)
-# def create_profile(sender,created, instance, **kwargs):
-#     if created:
-#         user_profile = UserProfile(user = instance)
-#         user_profile.save()
-
-    # #where to redirect after successful userprofile registration
-    # def get_absolute_url(self):
-    #     return reverse('dashboard',kwargs={'pk':self.pk})
-    # or
-    # def get_absolute_url(self):
-    #     return u'/some_url/%d' % self.id
-
 class MassNotification(models.Model):
-    user = models.ManyToManyField(User)
+    user = models.ManyToManyField(CAProfile)
     mass_message = models.TextField()
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
     mark_read = models.ManyToManyField(User, related_name='mark_read')
@@ -58,7 +46,7 @@ class MassNotification(models.Model):
 
 
 class UserNotification(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(CAProfile)
     message = models.TextField()
     mark_read = models.BooleanField(default=False)
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
@@ -75,8 +63,21 @@ def get_user_image_folder(instance, filename):
 #You don't have to use request in Models, you use instance instead.
 
 class Poster(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(CAProfile)
     poster = models.ImageField(upload_to = get_user_image_folder)
 
     def __unicode__(self):
         return '%s' % self.poster
+
+# @receiver(post_save, sender=User)
+# def create_profile(sender,created, instance, **kwargs):
+#     if created:
+#         user_profile = UserProfile(user = instance)
+#         user_profile.save()
+
+    # #where to redirect after successful userprofile registration
+    # def get_absolute_url(self):
+    #     return reverse('dashboard',kwargs={'pk':self.pk})
+    # or
+    # def get_absolute_url(self):
+    #     return u'/some_url/%d' % self.id

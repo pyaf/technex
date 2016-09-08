@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
-from TechnexUser.models import TechProfile
+from TechnexUser.models import TechProfile, College
 from ca.models import year_choices, CAProfile
 
 class RegisterForm(forms.ModelForm):
@@ -16,10 +16,9 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(label="Password",
                                widget=forms.TextInput(attrs={'class': 'form-control','required':'true','type':'password', 'placeholder':'Password', 'name': 'password'}))
 
-    year = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'required':'true','placeholder':'Year', }),choices=year_choices,)
+    year = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'required':'true', }),choices=year_choices,)
 
-    college = forms.CharField(label="College",
-                               widget=forms.TextInput(attrs={'class': 'form-control','type':'text','required':'true', 'placeholder':"College"}))
+   # college = forms.ModelChoiceField(queryset = College.objects.all() ,widget=forms.Select(attrs={'class': 'form-control'}))
 
     mobile_number = forms.IntegerField(label="Mobile Number",
                                widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'required':'true','placeholder':"Mobile Number"}))
@@ -28,7 +27,7 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = TechProfile
         fields = ['first_name', 'last_name','email','password','year','college','mobile_number']
-        exclude = ['user_id','user','profile_photo']
+        exclude = ['user_id','user','profile_photo','college']
 
 
 class FbForm(forms.ModelForm):

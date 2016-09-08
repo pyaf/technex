@@ -3,8 +3,11 @@
 
 {%block extra_css %}
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
-{%endblock%}
 
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+{% endblock %}
 {% block navbar%}
 <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -27,6 +30,9 @@
       <div class="col-md-6 columns">
         <form class="" action="" method="POST">
           {% csrf_token %}
+          <div class="form-group">
+          <input class="form-control" type="text" id="clg"  required="true" placeholder="College"/>
+        </div>
           {% for field in form %}
           {{  form.non_field_errors }}
 
@@ -35,6 +41,7 @@
           {{field.errors}}
           </div>
           {% endfor %}
+
           <button type="submit" class="btn btn-primary" name="button">Get Started</button>
         </form>
       </div>
@@ -43,4 +50,29 @@
 </div>
 </div>
 
+{% endblock %}
+{% block js %}
+
+
+<script>
+
+
+  $( function() {
+    var availableTags = [
+      {% for clg in all_colleges %}
+          "{{clg}}",
+      {%endfor%}
+    ];
+    $( "#clg" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  // over write the default autocomplete function to match the option starting with term
+  $.ui.autocomplete.filter = function (array, term) {
+    var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+    return $.grep(array, function (value) {
+      return matcher.test(value.label || value.value || value);
+    });
+  };
+</script>
 {% endblock %}

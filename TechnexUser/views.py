@@ -73,11 +73,11 @@ def FbView(request):
         if request.user.is_authenticated:#obviously if came here after FB
             try:
                 fb_user = UserStatus.objects.get(user=request.user)
-                allready_a_user = True
+                already_a_user = True
             except:
-                allready_a_user = False
+                already_a_user = False
 
-            if not allready_a_user: #first time.
+            if not already_a_user: #first time.
                 form = FbForm()
                 template_name = 'technexuser/fbregister.html'
                 return render(request,template_name,{'form':form})
@@ -95,17 +95,18 @@ def IndexView(request):
 
 def RegisterView(request):
     template_name = 'technexuser/registration.html'
+    all_colleges = College.objects.all()
     if request.method == "POST":
         form = RegisterForm(request.POST)
         post = request.POST
         if form.is_valid:
             email = post['email']
             try:
-                allready_a_user = User.objects.get(username=email)
+                already_a_user = User.objects.get(username=email)
             except:
-                allready_a_user = None
+                already_a_user = None
 
-            if allready_a_user is None:
+            if already_a_user is None:
                 user = User.objects.create_user(username=email, email=email)
                 user.first_name = post['first_name']
                 user.last_name = post['last_name']
@@ -114,6 +115,7 @@ def RegisterView(request):
                 user.save()
 
                 techprofile = form.save(commit=False)
+                techprofile.college = post.get('college') #not rendered as model in form, #autocomplete
                 techprofile.user = user
                 techprofile.save()
 
@@ -123,13 +125,13 @@ def RegisterView(request):
                 login(request, new_user)
 
                 return redirect('/dashboard')
-            else:#allready_a_user
+            else:#already_a_user
                 messages.warning(request,'email allready registered! try diffrent email id.',fail_silently=True)
-                return render(request,template_name,{'form':form})
+                return render(request,template_name,{'form':form, 'all_colleges':all_colleges})
         else:
-            return render(request,template_name,{'form':form})
+            return render(request,template_name,{'form':form, 'all_colleges':all_colleges})
     else:
-        return render(request,template_name,{'form':RegisterForm()})
+        return render(request,template_name,{'form':RegisterForm(),'all_colleges':all_colleges})
 
 
 def LoginView(request):
@@ -234,3 +236,22 @@ def ApiLoginView(request):
     except:
         response_data['error'] = True
         response_data['status'] = "Please Fill the form correctly!"
+
+
+# def CollegeSearch(request):
+#     if request.is_ajax:
+#         q = request.GET.get('term', '')
+#         print q
+#         print request
+        # search_qs = College.objects.filter(collegeName__startswith=request.POST.get('search'))
+        # results = []
+        # for r in search_qs:
+        #     json_data = {}
+        #     json_data['id'] = r.collegeId
+        #     json_data['label'] = r.CollegeName
+        #     json_data['value'] = r.CollegeName
+        #     results.append(json_data)
+        #
+        # resp = json.dumps(results)
+        # print resp
+        # return HttpResponse(resp, content_type='application/json')
