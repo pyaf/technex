@@ -31,7 +31,7 @@ def Tech2CA(request):
     u = request.user
     if request.method == "POST":
         form = Tech2CAForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             caprofile = form.save(commit=False)
             #saved WhatsApp,col add,postal add, pincode.
             caprofile.user = u
@@ -63,7 +63,7 @@ def FbView(request):
     if request.method == "POST":
         #user has submitted the techprofile form. i.e, after fb login and getting FbForm()
         form = FbForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             techuser = form.save(commit=False)
             techuser.user = request.user
             techuser.save()
@@ -104,7 +104,7 @@ def RegisterView(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         post = request.POST
-        if form.is_valid:
+        if form.is_valid():
             email = post['email']
             try:
                 already_a_user = User.objects.get(username=email)
@@ -146,7 +146,7 @@ def LoginView(request):
         post = request.POST
         form = LoginForm(post)
 
-        if form.is_valid:
+        if form.is_valid():
             email = post['email']
             password = post['password']
 
@@ -227,7 +227,7 @@ def ApiLoginView(request):
     data = json.loads(request.body)
     try:
         form = LoginForm(data)
-        if form.is_valid:
+        if form.is_valid():
             email = data.get('email',None)
             password = data.get('password',None)
             user = authenticate(username=email, email=email, password=password)
