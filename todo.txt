@@ -1,6 +1,0 @@
-tasks:
-
-registrations-->> all reg
-poster 1/5
-facebook like True/False
-auto like. and share -->>agree
