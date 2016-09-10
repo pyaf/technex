@@ -70,7 +70,7 @@ def CARegistrationView(request):
     template_name = 'ca/CARegistration.html'
     if request.method == "POST":
         form = CARegistrationForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             email = request.POST['email']
             password1 = request.POST['password1']
             password2 = request.POST['password2']
