@@ -8,7 +8,11 @@
 <l class="navbar-brand">It's Dashboard!</l>
 {% endblock %}
 
+
 {% block content %}
+
+
+
 
 <div class="content">
   <div class="container">
@@ -66,6 +70,9 @@
         </div>
       </div>
   </div>
+{% for task in tasks %}
+{{task.status/10}}
 
+{% endfor %}
 
 {% endblock %}
