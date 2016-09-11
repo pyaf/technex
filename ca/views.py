@@ -11,9 +11,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
-
+import requests
 import json
-
+import facebook
+import re
 from ca.models import *
 from ca.forms import *
 from TechnexUser.models import *
@@ -38,6 +39,7 @@ def context_call(request):
             'form' : ImageUploadForm(),
             'techprofiles' : TechProfile.objects.filter(college=college),
             'posters' : Poster.objects.filter(ca=request.user.caprofile),
+            'tasks' : TaskInstance.objects.filter(ca=request.user.caprofile)
 
         }
     return context
@@ -178,7 +180,10 @@ def DashboardView(request):
         context = context_call(request)
         if profile_done:
             print profile_done
-            return render(request,template_name,context)
+            #tasks = TaskInstance.objects.filter(ca__user = request.user)
+            #for task in tasks:
+                #print task.status
+            return render(request,template_name, context)
     except:
         return redirect('/ca/profile_registration')
 
@@ -235,3 +240,63 @@ def UpcomingEventsView(request):
     context = context_call(request)
 
     return render(request,template_name,context)
+
+'''
+Auto like,comment and share of posts of technex page while checking if post already shared.
+limit for sharing number of posts arranged as per the latest.
+'''
+def auto_likes(request,limit = 2):
+    token="EAACEdEose0cBAG4NjT4N71AF1Rv8DwHpFMwBLjpjgSXYeKZBvzqHuIqSyo0LeqSZANrZBrUvp41k0EJPtN3DQQtPTpiF2OKCPnJJJZAFwR2g4LqODG1oeQdHBn6CHlgAi4xOusCKGoPRfxoHK8z686Akd299fyedLIvVXmyypwZDZD"
+    graph = facebook.GraphAPI(access_token = token, version= '2.2')
+    profile = graph.get_object(id ='225615937462895')
+    posts = graph.get_connections(profile['id'],"posts",limit = limit)
+    userPosts = graph.get_object("me/feed")
+    #print(userPosts['data'])
+
+    links = []
+    for userPost in userPosts['data']:
+        links.append(userPost['link'])
+    #postIds = []
+    linksPosted = []
+    for post in posts['data']:
+        try:
+            graph.put_object(post['id'],"likes")
+            #postIds.append(post['link'])
+            attachment = {
+            'link':post['link'],
+            'name': 'testName',
+            'caption':'testCaption',
+            'description':'testDescription',
+            'picture':''
+            }
+            print post['link']
+            if post['link'] not in links:
+                linksPosted.append(post['link'])
+                graph.put_wall_post(message='',attachment = attachment)
+            #graph.put_comment(post['id'],message="(Y)")
+        except:
+            continue
+    return HttpResponse(str(linksPosted))
+
+#if user likes the page widout the bug :)
+def user_likes_page(page_id, token):
+    """
+    Returns whether a user likes a page
+    """
+    url = 'https://graph.facebook.com/me/likes/%s/' % page_id
+    parameters = {'access_token': token}
+    r = requests.get(url, params = parameters)
+    result = json.loads(r.text)
+    print r.text
+    if result['data']:
+        return True
+    else:
+        return False
+
+def demoCheck(request):
+    pageId = '225615937462895'
+    token="EAACEdEose0cBALZB0y3RETOvHHrUyFwcDpBtkJneTqQYbUNUoL8fZCT6Gf4bCDxZCTHJXihiguQEHXyRNX1nICpcBL1oIoAwdcxudDPZC8MAtvXH6CS4ZBhRJ8IIT5AZCaZCp9Yk78RXSQbnkicmHspxJGfG2WNdVauWrTZCH8yJBAZDZD"
+    if user_likes_page(pageId,token):
+        return HttpResponse("liked")
+    else:
+        return HttpResponse("Not Liked!")
