@@ -6,10 +6,8 @@ from TechnexUser.models import TechProfile, College
 from ca.models import year_choices, CAProfile
 
 class RegisterForm(forms.ModelForm):
-    first_name = forms.CharField(label="first name",
-                               widget=forms.TextInput(attrs={'class': 'form-control','required':'true','placeholder':'First Name',}))
-    last_name = forms.CharField(label="last name",
-                               widget=forms.TextInput(attrs={'class': 'form-control','required':'true','placeholder':'Last Name',}))
+    name = forms.CharField(label="Name",
+                               widget=forms.TextInput(attrs={'class': 'form-control','required':'true','placeholder':'Name',}))
 
     email = forms.EmailField(label="Email",widget=forms.TextInput(attrs={'class':'form-control','required':'true','placeholder':'Email'}))
 
@@ -26,7 +24,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = TechProfile
-        fields = ['first_name', 'last_name','email','password','year','college','mobile_number']
+        fields = ['name','email','password','year','college','mobile_number']
         exclude = ['user_id','user','profile_photo','college']
 
 
@@ -34,8 +32,8 @@ class FbForm(forms.ModelForm):
 
     year = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'required':'true','placeholder':'Year', }),choices=year_choices,)
 
-    college = forms.CharField(label="College",
-                               widget=forms.TextInput(attrs={'class': 'form-control','type':'text','required':'true', 'placeholder':"College"}))
+    # college = forms.CharField(label="College",
+    #                            widget=forms.TextInput(attrs={'class': 'form-control','type':'text','required':'true', 'placeholder':"College"}))
 
     mobile_number = forms.IntegerField(label="Mobile Number",
                                widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'required':'true','placeholder':"Mobile Number"}))
@@ -43,7 +41,7 @@ class FbForm(forms.ModelForm):
 
     class Meta:
         model = TechProfile
-        fields = ['year','college','mobile_number']
+        fields = ['year','mobile_number']
         exclude = ['user_id','user','profile_photo']
 
 
@@ -57,13 +55,9 @@ class Tech2CAForm(forms.ModelForm):
     postal_address = forms.CharField(label="Postal Address",
                                widget=forms.Textarea(attrs={'class': 'form-control','type':'textarea','rows': '5', 'placeholder':"Postal Address"}))
 
-    pincode = forms.IntegerField(label="Pincode",
-                               widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'placeholder':"Pincode"}))
-
-
     class Meta:
         model = CAProfile
-        fields = ['whatsapp_number','college_address','postal_address','pincode',]
+        fields = ['whatsapp_number','college_address','postal_address',]
 
 
 

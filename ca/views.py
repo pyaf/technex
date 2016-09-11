@@ -22,7 +22,7 @@ def context_call(request):
     college = request.user.caprofile.college
     ca_college_profile = CAProfile.objects.filter(college=college) #for showing other CAs of one's college.
 
-#will raise an error in first time visit of CA to the dashborad, when the User hasn't  created caprofile
+#will raise an error in  time visit of CA to the dashborad, when the User hasn't  created caprofile
 #using ProfileCreateView and trying to visit dashboard
     try:
         caprofile = request.user.caprofile
@@ -123,10 +123,13 @@ def ProfileCreateView(request):
         if form.is_valid():
             caprofile = form.save(commit=False)
             caprofile.user = request.user
-            caprofile.user.first_name = post['first_name']
-            caprofile.user.last_name = post['last_name']
+            caprofile.user.first_name = post['name']
             caprofile.user.save() #in order to save the first_name and last_name of current user.
-            college = College.objects.get(collegeName=post.get('college'))
+            try:
+                college = College.objects.get(collegeName=post.get('college'))
+            except:
+                college = College.objects.create(collegeName=post.get('college'))
+
             caprofile.college = college
             caprofile.save()
 
@@ -176,9 +179,7 @@ def DashboardView(request):
     try:
         profile_done = request.user.userstatus.is_ca
         context = context_call(request)
-        if profile_done:
-            print profile_done
-            return render(request,template_name,context)
+        return render(request,template_name,context)
     except:
         return redirect('/ca/profile_registration')
 

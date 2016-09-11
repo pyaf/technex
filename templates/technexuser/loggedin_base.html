@@ -45,6 +45,10 @@
                         <li>
                           <a class='btn btn-default' href="{% url 'technexuser:tech2ca' %}"> Become Technex CA</a>
                         </li>
+                        {% else %}
+                        <li>
+                          <a href="{% url 'ca:dashboard' %}">CA Dashboard</a>
+                        </li>
                         {% endif %}
                           {% block extra_link %}
                             <li>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, redirect,HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, redirect,HttpResponseRedirect, Http404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from TechnexUser.models import TechProfile, UserStatus
+from TechnexUser.models import *
 from TechnexUser.forms import *
 
 #json.loads will load a json object into a python dict,
@@ -16,9 +16,10 @@ from TechnexUser.forms import *
 
 def context_call(request):
     try: #use try instead of if :)
-        name = request.user.first_name + " " + request.user.last_name
+        name = request.user.first_name
     except:
         name = None
+
     context = {
         'name':name,
     }
@@ -41,6 +42,11 @@ def Tech2CA(request):
             caprofile.save()
 
             u.userstatus.is_ca = True
+            u.userstatus.save()
+            '''
+            NEVER EVER FORGET TO SAVE ALL THE INSTANCES YOU ModelChoiceField
+            '''
+
             return redirect('/ca/dashboard')
 
     else:
@@ -63,9 +69,16 @@ def FbView(request):
     if request.method == "POST":
         #user has submitted the techprofile form. i.e, after fb login and getting FbForm()
         form = FbForm(request.POST)
+        post = request.POST
         if form.is_valid():
             techuser = form.save(commit=False)
             techuser.user = request.user
+            try:
+                college = College.objects.get(collegeName=post.get('college'))
+            except:
+                college = College.objects.create(collegeName=post.get('college'))
+
+            techuser.college = college
             techuser.save()
 
             status = UserStatus.objects.create(user=request.user)
@@ -82,9 +95,13 @@ def FbView(request):
                 already_a_user = False
 
             if not already_a_user: #first time.
-                form = FbForm()
+                context= {
+                'form' : FbForm(),
+                'all_colleges':College.objects.all(),
+                }
+
                 template_name = 'technexuser/fbregister.html'
-                return render(request,template_name,{'form':form})
+                return render(request,template_name,context)
             else:#trying to log in..userstatus already there..
             #the user is already logged in,.redirect to dashboard.
                 return redirect('/dashboard')
@@ -113,13 +130,15 @@ def RegisterView(request):
 
             if already_a_user is None:
                 user = User.objects.create_user(username=email, email=email)
-                user.first_name = post['first_name']
-                user.last_name = post['last_name']
+                user.first_name = post['name']
                 password = post['password']
                 user.set_password(password)
                 user.save()
+                try:
+                    college = College.objects.get(collegeName=post.get('college'))
+                except:
+                    college = College.objects.create(collegeName=post.get('college'))
 
-                college = College.objects.get(collegeName=post.get('college'))
                 techprofile = form.save(commit=False)
                 techprofile.college = college#not rendered as model in form, #autocomplete
                 techprofile.user = user

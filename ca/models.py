@@ -17,8 +17,9 @@ class CAProfile(models.Model):
     college = models.ForeignKey(College,null = True)
     college_address = models.TextField()
     postal_address = models.TextField()
-    pincode = models.PositiveIntegerField()
     profile_photo = models.TextField(validators=[URLValidator()],blank=True)
+    whyChooseYou = models.TextField(blank=True,null=True)
+    pastExp = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return '%s-%s' %(self.college, self.user)

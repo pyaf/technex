@@ -31,11 +31,8 @@ class CARegistrationForm(forms.ModelForm):
 
 class ProfileCreationForm(forms.ModelForm):
 
-    first_name = forms.CharField(label="First Name",
-                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'First Name',}))
-
-    last_name = forms.CharField(label="Last Name",
-                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Last Name',}))
+    name = forms.CharField(label="Name",
+                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Name',}))
 
     year = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'placeholder':'Year', }),choices=year_choices,)
 
@@ -54,12 +51,10 @@ class ProfileCreationForm(forms.ModelForm):
     postal_address = forms.CharField(label="Postal Address",
                                widget=forms.Textarea(attrs={'class': 'form-control','type':'textarea','rows': '5', 'placeholder':"Postal Address"}))
 
-    pincode = forms.IntegerField(label="Pincode",
-                               widget=forms.TextInput(attrs={'class': 'form-control','type':'number', 'placeholder':"Pincode"}))
-
 
     class Meta:
         model = CAProfile
+        fields = ['name','year','mobile_number','whatsapp_number','college_address','postal_address']
         exclude = ['user_id','user','profile_photo','college']
 
 # class ProfileCreationForm(forms.ModelForm):
