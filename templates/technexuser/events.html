@@ -6,7 +6,7 @@
 {%endblock%}
 
 {% block navbar_name %}
-<l class="navbar-brand">TECHNEX'17</l>
+<l class="navbar-brand">It's Dashboard!</l>
 {% endblock %}
 
 
@@ -16,6 +16,7 @@
  <div class="container">
  <div class="row">
  <div class="col-md-3 columns">
+
    <div class="panel panel-default">
    <!-- Default panel contents -->
    <div class="panel-heading text-center">
@@ -24,16 +25,28 @@
 
    <!-- List group -->
    <ul  class="list-group">
- <a href="/events/" class="list-group-item">Events</a>
-  <a href="#" class="list-group-item">Your registered events</a>
+     {% for parentevent in parentevents %}
+ <a class="list-group-item" id="{{parentevent.parentEventId}}">{{ parentevent.categoryName }}</a>
+        {% endfor %}
    </ul>
  </div>
        </div>
                  <div class="col-md-9 columns">
-                   <div id="hide" class="jumbotron">
-                     <h2>Welcome to your TECHNEX! Dashboard</h2>
+                   {% for parentevent in parentevents %}
+                   <div class="">
+                     <p class="{{ parentevent.parentEventId }}">
+                       {{ parentevent.description }}
+                     </p>
+                     <br><br>
+                    {% for event in parentevent.event_set.all %}
+                     <div class="events">
+                       <ul>
+                         <a>{{event.eventName}}</a>
+                       </ul>
+                     </div>
+                     {% endfor %}
                    </div>
-
+                   {% endfor %}
                    {% if messages %}
                    {% for msg in messages %}
                        <div class="alert alert-{{msg.level_tag}}">
@@ -52,14 +65,13 @@
 
 {% endblock %}
 {% block extra_js%}
-
-
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
-    $("#hide").click(function(){
-        $('.panel').hide();
+    $("#").click(function(){
+        $("").toggleClass("blue");
     });
-
 });
+
 </script>
+<script src="/static/js/events.js" charset="utf-8"></script>
 {%endblock%}

@@ -11,7 +11,6 @@ year_choices = [
         (5,'Fifth'),
     ]
 
-
 def get_user_image_folder(instance, filename):
     return "technexusers/%s-%s/%s" %(instance.user.first_name,instance.user.last_name, filename)
 

@@ -10,7 +10,7 @@ import json
 
 from TechnexUser.models import TechProfile, UserStatus
 from TechnexUser.forms import *
-
+from TechnexUser.models import *
 #json.loads will load a json object into a python dict,
 # json.dumps will dump a python dict to a json object,
 
@@ -21,6 +21,7 @@ def context_call(request):
         name = None
     context = {
         'name':name,
+        'parentevents' : ParentEvent.objects.all()
     }
     return context
 
@@ -165,6 +166,12 @@ def LoginView(request):
             return render(request,template_name,{'form':form})
     else:
         return render(request,template_name,{'form': LoginForm()})
+
+def EventView(request):
+    template_name = 'technexuser/events.html'
+    context = context_call(request)
+    return render(request,template_name,context)
+
 
 @login_required(login_url='/login') #not /login/
 def LogoutView(request):

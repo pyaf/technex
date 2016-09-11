@@ -27,6 +27,8 @@ urlpatterns = [
 
 	url(r'^dashboard/$', DashboardView, name='dashboard'),
 
+	url(r'^events/$', EventView, name='event'),
+
 	url(r'^logout/$', LogoutView, name='logout'),
 
 ]

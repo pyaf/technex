@@ -20,7 +20,7 @@ class UserAdmin(UserAdmin):
     def college(obj):
         try:
             return "%s" % obj.caprofile.college
-        except:    
+        except:
             return "%s" % obj.techprofile.college
         else:
             return "No college"
@@ -59,7 +59,7 @@ class MassNotificationAdmin(admin.ModelAdmin):
 class UserNotificationAdmin(admin.ModelAdmin):
 
     def name(obj):
-        return "%s %s" % (obj.user.first_name, obj.user.last_name)
+        return "%s %s" % (obj.ca.user.first_name, obj.ca.user.last_name)
 
     name.short_description = 'Name'
     list_display = [name,'message','mark_read']
