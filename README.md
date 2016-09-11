@@ -3,7 +3,7 @@
 # Api Documentation
 ## Registration Api
 <br> <br>
-Url: http://technex-ca.herokuapp.com/api/register
+Url: http://technex.herokuapp.com/api/register
 <br>
 Method: POST
 <br>
@@ -37,7 +37,7 @@ Json Response for Invalid Request(requests other than post):<br>
 
 ## Login Api
 <br><br>
-Url: http://technex-ca.herokuapp.com/api/login
+Url: http://technex.herokuapp.com/api/login
 <br>
 Method: POST
 <br>
