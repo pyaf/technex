@@ -18,6 +18,7 @@ import re
 from ca.forms import *
 from ca.models import *
 from task.models import *
+from task.forms import *
 from TechnexUser.models import *
 
 def context_call(request):
@@ -30,7 +31,7 @@ def context_call(request):
         ca = request.user.caprofile
     except:
         ca = None
-
+    taskInstances = TaskInstance.objects.filter(ca = ca)
     context = {
             # 'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
             'caprofile' : ca,
@@ -38,6 +39,10 @@ def context_call(request):
             'user_msgs': ca.usernotification_set.filter(mark_read=False),
             'all_user_msgs': ca.usernotification_set.all(),
             'total_msgs': ca.massnotification_set.count() + ca.usernotification_set.filter(mark_read=False).count(),
+            'tasks' : Task.objects.all(),
+            'taskInstances' : taskInstances, 
+            'ddform':DirectorDetailForm(),
+            'sbdform':StudentBodyDetailForm(),
             # 'poster_count': ca.poster_set.count(),
             # 'form' : ImageUploadForm(),
             # 'techprofiles' : TechProfile.objects.filter(college=college),
@@ -45,6 +50,7 @@ def context_call(request):
 
 
         }
+    # print context['tasks']
     return context
 
 
@@ -154,7 +160,10 @@ def ProfileCreateView(request):
             caprofile.college_address = post.get('college_address')
             caprofile.postal_address = post.get('postal_address')
             caprofile.save()
-
+            tasks = Task.objects.all()
+            for task in tasks:
+                taskInstance = TaskInstance(task = task, ca = caprofile)
+                taskInstance.save()
             #UserStatus is already created, as the user has signned in currently,.So it is a User n so has UserStatus
             status = UserStatus.objects.get(user=request.user)
             status.is_ca = True
@@ -309,7 +318,7 @@ def user_likes_page(page_id, token):
 
 def demoCheck(request):
     pageId = '225615937462895'
-    token="EAAEaYmywDIABANytfYi7RojZCXh7pX1WTbI1FefjtqhviGKcze89SkyLmyZBCCra94Mk7dbBn2jlewgG43DagbhDmhEUlgI1URR8siLJm4tfligl4FOOzhGHkYZBGk5twErHuog45Mm5p932zM3fhOvTwNUgf3eZA8raeLIuRSOGx1xX6cAS3OdL2YUnuoZBOruE0R1ph9wZDZD"
+    token="EAAGjmqGLNv0BAKxqtly08VpLrfeiny5irGlf2DFDdf84UQ1zmE0MpAZCGqfLhU1g7sugCKorHmZByQ5gx2zSrG1ZBU2Xf5BlYnp7uzNAZABmZCmM0fTuoPly3njQgquZBak3i8Irta9GDlB7IVWaXZBB6qB48CtbfLRYZA0m4JkFmvZBhhuDEAihM20KEOcAgnn7P8QCoYj0SYgZDZD"
     if user_likes_page(pageId,token):
         return HttpResponse("liked")
     else:

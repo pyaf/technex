@@ -1,14 +1,16 @@
 from django import forms
+from task.models import *
+
 
 class DirectorDetailForm(forms.ModelForm):
 
     class Meta:
         model = DirectorDetail
-        exclude = ['dd','ca']
+        exclude = ['ca']
 
 
-class DirectorDetailForm(forms.ModelForm):
+class StudentBodyDetailForm(forms.ModelForm):
 
     class Meta:
-        model = studentBodyDetail
-        exclude = ['sbd','ca']
+        model = StudentBodyDetail
+        exclude = ['ca']

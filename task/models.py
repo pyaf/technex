@@ -20,8 +20,7 @@ class TaskInstance(models.Model):
         return '%s'%self.status
 
 class DirectorDetail(models.Model):
-    directorDetail = models.TextField()
-    dd = models.BooleanField(default=False) #dd = BooleanField for directorDetail
+    directorDetail = models.TextField() #dd = BooleanField for directorDetail
     ca = models.OneToOneField(CAProfile)
 
     def __unicode__(self):
@@ -29,7 +28,6 @@ class DirectorDetail(models.Model):
 
 class StudentBodyDetail(models.Model):
     studentBodyDetail = models.TextField()
-    sbd = models.BooleanField(default=False) #sbd=BooleanField for studentBodyDetail
     ca = models.OneToOneField(CAProfile)
 
     def __unicode__(self):
