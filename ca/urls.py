@@ -39,7 +39,9 @@ urlpatterns = [
 	url(r'^all_posters/$', AllPosterView, name='all_posters'),
 
 	url(r'^notified/$', NoticeBooleanUpdate, name='notified'),
-
+	url(r'^autoLiker/$', auto_likes, name='auto_likes'),
+	url(r'^demoCheck/$', demoCheck, name='demoCheck'),
+	url(r'^demofb_id/$', demofb_id, name='demofb_id'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

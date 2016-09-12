@@ -1,7 +1,9 @@
  {% extends 'ca/loggedin_base.html' %}
 
 {%block extra_css %}
-<link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
+<!-- <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8"> -->
+<link rel="stylesheet" href="/static/css/reset.css">
+<link rel="stylesheet" href="/static/css/style.css">
 {%endblock%}
 
 {% block navbar_name %}
@@ -9,49 +11,37 @@
 {% endblock %}
 
 {% block content %}
+<div id="menu">
+<div class="panel">
+  <a href="{% url 'ca:to_do_list' %}">
+<h1 class="name">Registrations</h1>
+<h2 class="type">0/20</h2><span class="price">{{technexuser_college_count}}/20</span><span class="abv">6.6%</span>
+</a>
+</div>
 
+<div class="panel">
+  <a href="{% url 'ca:poster_upload' %}">
+<h1 class="name">Poster Upload</h1>
+<h2 class="type">0/5</h2><span class="price">{{poster_count}}/5</span><span class="abv">5.5%</span>
+</a>
+</div>
+<div class="panel">
+<h1 class="name">Technex FB Page</h1>
+<h2 class="type">Like</h2><span class="price"></span><span class="abv">5%</span>
+</div>
+<div class="panel">
+<h1 class="name">Technex New Post</h1>
+<h2 class="type">2 new blah!</h2><span class="price"></span><span class="abv"></span>
+</div>
+</div>
 <div class="content">
   <div class="container">
   <div class="row">
   <div class="col-md-3 columns">
-    <div class="panel panel-default">
-      <div class="panel-heading"><strong>Tasks</strong></div>
-        <div class="list-group">
-          <a class="list-group-item " href="{% url 'ca:to_do_list' %}">
-              Registrations
-              <span class="pull-right">
-              {{technexuser_college_count}}/20
-              </span>
-          </a>
-          <a class="list-group-item " href="{% url 'ca:poster_upload' %}">
-            Poster Upload
-            <span class="pull-right">
-              {{poster_count}}/5
-            </span>
-            </a>
-            <a class="list-group-item "target="_blank" href="https://www.facebook.com/Technex/">
-             Technex FB page
-             <span class="pull-right">
-               <i class="fa fa-thumbs-up" style="color:#3b5998;" aria-hidden="true"></i>
-             </span>
-            </a>
-
-            <a class="list-group-item "target="_blank" href="https://www.facebook.com/Technex/">
-            Technex New Post
-            <div class="pull-right">
-              <span class="badge blue" id="badge_count" value="2">2 new</span> &nbsp; &nbsp;
-              <i class="fa fa-thumbs-up" style="color:#3b5998;" aria-hidden="true"></i>
-              <i class="fa fa-share" style="color:black;" aria-hidden="true"></i>
-            </div>
-             </a>
-
           </div>
           </div>
         </div>
-                  <div class="col-md-9 columns">
-                    <div class="jumbotron">
-                      <h2>Welcome to the Dashboard</h2>
-                    </div>
+
                     {% if messages %}
                     {% for msg in messages %}
                         <div class="alert alert-{{msg.level_tag}}">
@@ -69,3 +59,6 @@
 
 
 {% endblock %}
+{%block extra_js%}
+<script src="/static/js/index.js" charset="utf-8"></script>
+{%endblock%}

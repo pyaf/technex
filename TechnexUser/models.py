@@ -59,6 +59,15 @@ class Event(models.Model):
     def __unicode__(self):
         return self.eventName
 
+class EventOption(models.Model):
+    event = models.ForeignKey(Event)
+    name = models.CharField(max_length=50)
+    discription = models.TextField()
+
+    def __unicode__(self):
+        return self.name
+
+
 class Team(models.Model):
     teamName = models.CharField(max_length=50, null=True, blank=True)
     teamId = models.AutoField(primary_key = True)
