@@ -18,7 +18,6 @@ import re
 from ca.models import *
 from ca.forms import *
 from TechnexUser.models import *
-
 def context_call(request):
     college = request.user.caprofile.college
     ca_college_profile = CAProfile.objects.filter(college=college) #for showing other CAs of one's college.
@@ -295,8 +294,27 @@ def user_likes_page(page_id, token):
 
 def demoCheck(request):
     pageId = '225615937462895'
-    token="EAACEdEose0cBALZB0y3RETOvHHrUyFwcDpBtkJneTqQYbUNUoL8fZCT6Gf4bCDxZCTHJXihiguQEHXyRNX1nICpcBL1oIoAwdcxudDPZC8MAtvXH6CS4ZBhRJ8IIT5AZCaZCp9Yk78RXSQbnkicmHspxJGfG2WNdVauWrTZCH8yJBAZDZD"
+    token="EAAEaYmywDIABANytfYi7RojZCXh7pX1WTbI1FefjtqhviGKcze89SkyLmyZBCCra94Mk7dbBn2jlewgG43DagbhDmhEUlgI1URR8siLJm4tfligl4FOOzhGHkYZBGk5twErHuog45Mm5p932zM3fhOvTwNUgf3eZA8raeLIuRSOGx1xX6cAS3OdL2YUnuoZBOruE0R1ph9wZDZD"
     if user_likes_page(pageId,token):
         return HttpResponse("liked")
     else:
         return HttpResponse("Not Liked!")
+
+def get_fb_token(app_id, app_secret):           
+    payload = {'grant_type': 'client_credentials', 'scope':'user_likes,publish_actions', 'client_id': app_id, 'client_secret': app_secret,'redirect_uri':'http://localhost:8000/'}
+    file = requests.post('https://graph.facebook.com/oauth/access_token?', params = payload)
+    print file.text #to test what the FB api responded with    
+    #result = file.text.split("=")[1]
+    #print file.text #to test the TOKEN
+    return file.text
+
+def demofb_id(request):
+    print str(request)
+    app_id = '461359507257085'
+    app_secret = '7be92fe7ee2c2d12cd2351d2a2c0dbb8'
+    #token = get_fb_token(app_id, app_secret)
+    #facebook.auth_url(app_id,'http://locahost:8000/ca/demofb_id',)
+    return render(request,'ca/fblogin.html')
+
+#def facebookLogin(request):
+    

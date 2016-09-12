@@ -164,3 +164,22 @@ ACCOUNT_USERNAME_REQUIRED = False
 # Fix: username length is too small,email must be unique
 # User._meta.local_fields[1].__dict__['max_length'] = 75
 # User._meta.local_fields[4].__dict__['_unique'] = True
+SOCIALACCOUNT_PROVIDERS = \
+    {'facebook':
+       {'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile','user_likes','publish_actions'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'updated_time'],
+        'EXCHANGE_TOKEN': True,
+        'LOCALE_FUNC': 'path.to.callable',
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.4'}}
