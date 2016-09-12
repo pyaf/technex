@@ -11,7 +11,7 @@ from TechnexUser.models import College,year_choices
 
 class CAProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
-    year = models.IntegerField(choices=year_choices,null=True)
+    year = models.IntegerField(choices=year_choices,null=True,blank=True)
     mobile_number = models.BigIntegerField(null=True)
     whatsapp_number = models.BigIntegerField(null=True)
     college = models.ForeignKey(College,null = True)
@@ -61,21 +61,6 @@ class Poster(models.Model):
 
     def __unicode__(self):
         return '%s' % self.poster
-
-class Task(models.Model):
-    taskId = models.AutoField(primary_key = True)
-    taskName = models.CharField(max_length = 50)
-    taskDescription = models.TextField()
-    deadLine = models.DateTimeField()
-    def __unicode__(self):
-        return self.taskName
-
-class TaskInstance(models.Model):
-    task = models.ForeignKey(Task)
-    ca = models.ForeignKey(CAProfile)
-    status = models.SmallIntegerField(default = 0) #Added this field to show partial completion(0-10) of work
-    def __unicode__(self):
-        return '%s'%self.status
 
 # @receiver(post_save, sender=User)
 # def create_profile(sender,created, instance, **kwargs):

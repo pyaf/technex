@@ -15,13 +15,14 @@ import requests
 import json
 import facebook
 import re
-from ca.models import *
 from ca.forms import *
+from ca.models import *
+from task.models import *
 from TechnexUser.models import *
 
 def context_call(request):
-    college = request.user.caprofile.college
-    ca_college_profile = CAProfile.objects.filter(college=college) #for showing other CAs of one's college.
+    # college = request.user.caprofile.college
+    # ca_college_profile = CAProfile.objects.filter(college=college) #for showing other CAs of one's college.
 
 #will raise an error in  time visit of CA to the dashborad, when the User hasn't  created caprofile
 #using ProfileCreateView and trying to visit dashboard
@@ -31,16 +32,17 @@ def context_call(request):
         ca = None
 
     context = {
-            'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
+            # 'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
             'caprofile' : ca,
             'mass_msgs': ca.massnotification_set.all,
             'user_msgs': ca.usernotification_set.filter(mark_read=False),
             'all_user_msgs': ca.usernotification_set.all(),
             'total_msgs': ca.massnotification_set.count() + ca.usernotification_set.filter(mark_read=False).count(),
-            'poster_count': ca.poster_set.count(),
-            'form' : ImageUploadForm(),
-            'techprofiles' : TechProfile.objects.filter(college=college),
-            'posters' : Poster.objects.filter(ca=request.user.caprofile),
+            # 'poster_count': ca.poster_set.count(),
+            # 'form' : ImageUploadForm(),
+            # 'techprofiles' : TechProfile.objects.filter(college=college),
+            # 'posters' : Poster.objects.filter(ca=request.user.caprofile),
+
 
         }
     return context

@@ -20,6 +20,7 @@ DEBUG = True
 INSTALLED_APPS = [
     'ca',
     'TechnexUser',
+    'task',
     'allauth',
     'allauth.socialaccount',
     'allauth.account',
@@ -167,7 +168,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 SOCIALACCOUNT_PROVIDERS = \
     {'facebook':
        {'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile','user_likes','publish_actions'],
+        'SCOPE': ['email', 'public_profile','publish_actions'],
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
         'FIELDS': [
             'id',

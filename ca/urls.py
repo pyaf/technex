@@ -26,22 +26,22 @@ urlpatterns = [
 	#notification
 	url(r'^notifications/$', notificationsView, name='all_notifications'),
 
-	#to_do_list
-	url(r'^to_do_list/$', ToDoListView, name='to_do_list'),
+	#To see college registrations
+	# url(r'^to_do_list/$', ToDoListView, name='to_do_list'),
 
 	#poster_upload
-	url(r'^poster_upload/$', PosterUploadView, name='poster_upload'),
+	# url(r'^poster_upload/$', PosterUploadView, name='poster_upload'),
 
 	#upcoming_events
-	url(r'^upcoming_events/$', UpcomingEventsView, name='upcoming_events'),
+	# url(r'^upcoming_events/$', UpcomingEventsView, name='upcoming_events'),
 
 	#user's posters
-	url(r'^all_posters/$', AllPosterView, name='all_posters'),
+	# url(r'^all_posters/$', AllPosterView, name='all_posters'),
 
 	url(r'^notified/$', NoticeBooleanUpdate, name='notified'),
-	url(r'^autoLiker/$', auto_likes, name='auto_likes'),
-	url(r'^demoCheck/$', demoCheck, name='demoCheck'),
-	url(r'^demofb_id/$', demofb_id, name='demofb_id'),
+	# url(r'^autoLiker/$', auto_likes, name='auto_likes'),
+	# url(r'^demoCheck/$', demoCheck, name='demoCheck'),
+	# url(r'^demofb_id/$', demofb_id, name='demofb_id'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
