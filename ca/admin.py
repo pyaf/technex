@@ -14,13 +14,13 @@ class UserStatusInline(admin.StackedInline):
 class UserAdmin(UserAdmin):
 
     def name(obj):
-        return "%s %s" % (obj.first_name, obj.last_name)
+        return "%s" % (obj.first_name)
 
 
     def college(obj):
         try:
             return "%s" % obj.caprofile.college
-        except:    
+        except:
             return "%s" % obj.techprofile.college
         else:
             return "No college"
@@ -46,9 +46,7 @@ class UserAdmin(UserAdmin):
         except:
             return "None"
 
-    name.short_description = 'Name'
-    college.short_description = 'College'
-    mobile_number.short_description = 'Mobile No.'
+#    name.short_description = 'Name'
 
     inlines = (UserStatusInline, )
     list_display = ('email',name, college, mobile_number, CA , TechUser)
@@ -59,15 +57,17 @@ class MassNotificationAdmin(admin.ModelAdmin):
 class UserNotificationAdmin(admin.ModelAdmin):
 
     def name(obj):
-        return "%s %s" % (obj.user.first_name, obj.user.last_name)
+        return "%s" % (obj.ca.user.first_name)
+    def College(obj):
+        return "%s" % (obj.ca.college)
 
-    name.short_description = 'Name'
-    list_display = [name,'message','mark_read']
+
+    list_display = [name,College,'message','mark_read']
 
 class PosterAdmin(admin.ModelAdmin):
 
     def name(obj):
-        return "%s %s" % (obj.user.first_name, obj.user.last_name)
+        return "%s" % (obj.user.first_name)
 
     name.short_description = 'Name'
     list_display = (name,'poster')

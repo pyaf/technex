@@ -11,25 +11,25 @@ from TechnexUser.models import College,year_choices
 
 class CAProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
-    year = models.IntegerField(choices=year_choices)
-    mobile_number = models.BigIntegerField()
-    whatsapp_number = models.BigIntegerField()
+    year = models.IntegerField(choices=year_choices,null=True)
+    mobile_number = models.BigIntegerField(null=True)
+    whatsapp_number = models.BigIntegerField(null=True)
     college = models.ForeignKey(College,null = True)
-    college_address = models.TextField()
-    postal_address = models.TextField()
+    college_address = models.TextField(null=True)
+    postal_address = models.TextField(null=True)
     profile_photo = models.TextField(validators=[URLValidator()],blank=True)
     whyChooseYou = models.TextField(blank=True,null=True)
     pastExp = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return '%s-%s' %(self.college, self.user)
+        return '%s-%s' %(self.user.first_name, self.college)
 
 
 class MassNotification(models.Model):
     ca = models.ManyToManyField(CAProfile)
     mass_message = models.TextField()
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
-    mark_read = models.ManyToManyField(User, related_name='mark_read')
+    mark_read = models.ManyToManyField(CAProfile, related_name='mark_read',blank=True)
 
     def __unicode__(self):
         return self.mass_message

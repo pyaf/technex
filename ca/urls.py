@@ -24,7 +24,7 @@ urlpatterns = [
 	url(r'^settings/$', AccountDetailView, name='settings'),
 
 	#notification
-	url(r'^notifications/$', NotificationsView, name='notifications'),
+	url(r'^notifications/$', notificationsView, name='all_notifications'),
 
 	#to_do_list
 	url(r'^to_do_list/$', ToDoListView, name='to_do_list'),

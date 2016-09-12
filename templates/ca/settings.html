@@ -24,9 +24,6 @@
               <strong>Settings</strong>
             </div>
             <div class="list-group">
-              <a class="list-group-item " href="{% url 'account_email' %}">
-                Change Email
-              </a>
               <a class="list-group-item " href="{% url 'account_change_password' %}">
                 Change Password
               </a>
@@ -64,10 +61,6 @@
                   <tr>
                     <td>Postal Address :</td>
                     <td>{{caprofile.postal_address}}</td>
-                  </tr>
-                  <tr>
-                    <td>Pincode :</td>
-                    <td>{{caprofile.pincode}}</td>
                   </tr>
               </table>
           </div>

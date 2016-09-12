@@ -22,5 +22,7 @@ function notified(){
 
 $('.checkbox').on('change', function(event){
   notified();
-  context_update();
+  location.reload();
+
+
 });

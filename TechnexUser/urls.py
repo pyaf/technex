@@ -17,7 +17,7 @@ urlpatterns = [
 
 	url(r'^$', IndexView, name= 'index'),
 
-	url(r'^login/$', LoginView, name= 'login'),
+	url(r'^login$', LoginView, name= 'login'),
 
 	url(r'^register/$', RegisterView, name='register'),
 

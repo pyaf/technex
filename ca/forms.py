@@ -13,6 +13,9 @@ class ImageUploadForm(forms.ModelForm):
 
 class CARegistrationForm(forms.ModelForm):
 
+    name = forms.CharField(label="Name",
+                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Name',}))
+
     email = forms.EmailField(label="Email",widget=forms.TextInput(attrs={'class':'form-control',
                                                                          'required':'true','placeholder':'Email'}))
 
@@ -26,13 +29,11 @@ class CARegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email','password1','password2']
+        fields = ['name','email','password1','password2']
         exclude = ['username','first_name','last_name']
 
 class ProfileCreationForm(forms.ModelForm):
 
-    name = forms.CharField(label="Name",
-                               widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Name',}))
 
     year = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control', 'placeholder':'Year', }),choices=year_choices,)
 
@@ -54,7 +55,7 @@ class ProfileCreationForm(forms.ModelForm):
 
     class Meta:
         model = CAProfile
-        fields = ['name','year','mobile_number','whatsapp_number','college_address','postal_address']
+        fields = ['year','mobile_number','whatsapp_number','college_address','postal_address']
         exclude = ['user_id','user','profile_photo','college']
 
 # class ProfileCreationForm(forms.ModelForm):

@@ -25,16 +25,18 @@ def context_call(request):
 #will raise an error in  time visit of CA to the dashborad, when the User hasn't  created caprofile
 #using ProfileCreateView and trying to visit dashboard
     try:
-        caprofile = request.user.caprofile
+        ca = request.user.caprofile
     except:
-        caprofile = None
+        ca = None
 
     context = {
             'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
-            'caprofile' : caprofile,
-            'all_msgs': request.user.caprofile.massnotification_set.all,
-            'user_msgs': request.user.caprofile.usernotification_set.filter(mark_read=False),
-            'poster_count': request.user.caprofile.poster_set.count(),
+            'caprofile' : ca,
+            'mass_msgs': ca.massnotification_set.all,
+            'user_msgs': ca.usernotification_set.filter(mark_read=False),
+            'all_user_msgs': ca.usernotification_set.all(),
+            'total_msgs': ca.massnotification_set.count() + ca.usernotification_set.filter(mark_read=False).count(),
+            'poster_count': ca.poster_set.count(),
             'form' : ImageUploadForm(),
             'techprofiles' : TechProfile.objects.filter(college=college),
             'posters' : Poster.objects.filter(ca=request.user.caprofile),
@@ -42,12 +44,20 @@ def context_call(request):
         }
     return context
 
+
+@login_required(login_url = "/login")
+def notificationsView(request):
+    template_name = 'ca/notifications.html'
+    context = context_call(request)
+    return render(request, template_name, context)
+
 @csrf_exempt
 def NoticeBooleanUpdate(request):
     if request.method == "POST" and request.is_ajax():
         msg_id = request.POST.get('msg_id')
+        print msg_id
         response_data = {}
-        notice = request.user.usernotification_set.get(id=msg_id)
+        notice = request.user.caprofile.usernotification_set.get(id=msg_id)
         notice.mark_read = True
         notice.save()
 
@@ -68,22 +78,36 @@ class IndexView(generic.View):
 
 def CARegistrationView(request):
     template_name = 'ca/CARegistration.html'
+    context = {
+            'all_colleges':College.objects.all(),
+            'form' : CARegistrationForm()
+    }
     if request.method == "POST":
+        post = request.POST
         form = CARegistrationForm(request.POST)
         if form.is_valid():
-            email = request.POST['email']
-            password1 = request.POST['password1']
-            password2 = request.POST['password2']
+            email = post['email']
+            password1 = post['password1']
+            password2 = post['password2']
             if password1 == password2:
                 try:
                     already_a_user = User.objects.get(username=email)
                 except:# unique user.
                     already_a_user = False
 
-                if not already_a_user:
+                if not already_a_user:#create new User instance.
                     user = User.objects.create_user(username=email,email=email)
+                    user.first_name = post.get('name')
                     user.set_password(password1)
                     user.save()
+                    caprofile = CAProfile.objects.create(user=user)
+                    try:
+                        college = College.objects.get(collegeName=post.get('college'))
+                    except:
+                        college = College.objects.create(collegeName=post.get('college'))
+
+                    caprofile.college = college
+                    caprofile.save()
 
                     status = UserStatus.objects.create(user=user)
                     #CA by default is to be made ca and techuser.
@@ -95,17 +119,16 @@ def CARegistrationView(request):
 
                 else:# already a user.
                     messages.warning(request,'email already registered!, if you have already registered for Technex, the link of CA registration is at dashboard',fail_silently=True)
-                    return render(request,template_name,{'form':form})
+                    return render(request,template_name,{'form':form, 'all_colleges':context['all_colleges']})
 
             else: #password mismatch
                 messages.warning(request,"Passwords didn't match")
-                return render(request,template_name,{'form':form})
+                return render(request,template_name,{'form':form,'all_colleges':context['all_colleges']})
         else: #form isn't valid
-            return render(request,template_name,{'form':form})
+            return render(request,template_name,{'form':form,'all_colleges':context['all_colleges']})
 
     else: #not a post request
-        form = CARegistrationForm()
-        return render(request,template_name,{'form':form})
+        return render(request,template_name,context)
 
 
 @login_required(login_url = "/login")
@@ -113,7 +136,6 @@ def ProfileCreateView(request):
 
     context = {
             'form': ProfileCreationForm(),
-            'all_colleges':College.objects.all(),
     }
 
     template_name = 'ca/profile_registration.html'
@@ -121,16 +143,13 @@ def ProfileCreateView(request):
         post = request.POST
         form = ProfileCreationForm(request.POST)
         if form.is_valid():
-            caprofile = form.save(commit=False)
-            caprofile.user = request.user
-            caprofile.user.first_name = post['name']
-            caprofile.user.save() #in order to save the first_name and last_name of current user.
-            try:
-                college = College.objects.get(collegeName=post.get('college'))
-            except:
-                college = College.objects.create(collegeName=post.get('college'))
-
-            caprofile.college = college
+            #User and its CAProfile instance is has already been created in CARegistrationView
+            caprofile = CAProfile.objects.get(user=request.user)
+            caprofile.year = post.get('year')
+            caprofile.mobile_number = post.get('mobile_number')
+            caprofile.whatsapp_number = post.get('whatsapp_number')
+            caprofile.college_address = post.get('college_address')
+            caprofile.postal_address = post.get('postal_address')
             caprofile.save()
 
             #UserStatus is already created, as the user has signned in currently,.So it is a User n so has UserStatus
@@ -171,6 +190,7 @@ def ProfileCreateView(request):
 '''
 IF THERE'S A LOOP OF BETWEEN DashboardView AND ProfileCreateView--> THE BUG May be IN context_call!!
 It might not raise an error and trigger the except in DashboardView-->ProfileCreateView-->>DashboardView and so on!!
+###THAT'S WHY TO PREVENT SUCH SITUATION USED try for 'context'.
 '''
 
 @login_required(login_url='/login')
@@ -180,8 +200,9 @@ def DashboardView(request):
         profile_done = request.user.userstatus.is_ca
         context = context_call(request)
         return render(request,template_name,context)
-    except:
-        return redirect('/ca/profile_registration')
+    except Exception as e:
+        return HttpResponse(e)
+        # return redirect('/ca/profile_registration')
 
 @login_required(login_url = "/login")
 def PosterUploadView(request):
@@ -208,11 +229,6 @@ def AllPosterView(request):
     return render(request,template_name, context)
 
 
-@login_required(login_url = "/login")
-def NotificationsView(request):
-    template_name = 'ca/notifications.html'
-    context = context_call(request)
-    return render(request, template_name, context)
 #{{ request.user.massnotification_set.count|add:request.user.usernotification_set.count}}
 
 
