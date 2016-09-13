@@ -32,7 +32,16 @@ def context_call(request):
     except:
         ca = None
     taskInstances = TaskInstance.objects.filter(ca = ca)
-
+    try:
+        dd = DirectorDetail.objects.get(ca=ca)
+        ddData = dd.directorDetail
+    except:
+        ddData = None
+    try:
+        sbd = StudentBodyDetail.objects.get(ca=ca)
+        sbdData = sbd.studentBodyDetail
+    except:
+        sbdData = None
     context = {
             # 'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
             'caprofile' : ca,
@@ -41,10 +50,10 @@ def context_call(request):
             'all_user_msgs': ca.usernotification_set.all(),
             'total_msgs': ca.massnotification_set.count() + ca.usernotification_set.filter(mark_read=False).count(),
             'tasks' : Task.objects.all(),
-            'taskInstances' : taskInstances, 
-            'ddform':DirectorDetailForm(),
-            'sbdform':StudentBodyDetailForm(),
-            
+            'taskInstances' : taskInstances,
+            'ddform':DirectorDetailForm(initial={'directorDetail':ddData}),
+            'sbdform':StudentBodyDetailForm(initial={'studentBodyDetail' : sbdData}),
+
             # 'poster_count': ca.poster_set.count(),
             # 'form' : ImageUploadForm(),
             # 'techprofiles' : TechProfile.objects.filter(college=college),

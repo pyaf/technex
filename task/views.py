@@ -34,14 +34,14 @@ def submitDirectorDetail(request):
 			except:
 				directorDetail = DirectorDetail(ca = request.user.caprofile, directorDetail = post.get('directorDetail'))
 			taskInstance = TaskInstance.objects.get(task__taskName = 'Director Contact Details', ca = request.user.caprofile)
-			taskInstance.status = 10
+			taskInstance.status = 100
 			directorDetail.save()
 			taskInstance.save()
 			response['status'] = 'OK'
 		else:
 			response['status'] = 'Form Not valid'
 	else:
-		response['status'] = 'Invalid request'		
+		response['status'] = 'Invalid request'
 	return JsonResponse(response)
 
 
@@ -58,12 +58,12 @@ def submitStudentBodyDetail(request):
 			except:
 				studentBodyDetail = StudentBodyDetail(ca = request.user.caprofile, studentBodyDetail = post.get('studentBodyDetail'))
 			taskInstance = TaskInstance.objects.get(task__taskName = 'Student Body Head Details', ca = request.user.caprofile)
-			taskInstance.status = 10
+			taskInstance.status = 100
 			studentBodyDetail.save()
 			taskInstance.save()
 			response['status'] = 'OK'
 		else:
 			response['status'] = 'Form Not valid'
 	else:
-		response['status'] = 'Invalid request'		
-	return JsonResponse(response)	
+		response['status'] = 'Invalid request'
+	return JsonResponse(response)
