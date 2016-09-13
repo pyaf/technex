@@ -54,6 +54,7 @@ def notificationsView(request):
     context = context_call(request)
     return render(request, template_name, context)
 
+
 @csrf_exempt
 def NoticeBooleanUpdate(request):
     if request.method == "POST" and request.is_ajax():
@@ -73,6 +74,7 @@ def NoticeBooleanUpdate(request):
             json.dumps({"nothing to see":"this is not working"}),
             content_type = "application/json"
         )
+
 
 class IndexView(generic.View):
     def get(self, request):
