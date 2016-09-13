@@ -2,6 +2,7 @@
 
 {%block extra_css %}
 <link rel="stylesheet" href="/static/css/own/dashboard.css" media="screen" title="no title" charset="utf-8">
+<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
 <!-- <link rel="stylesheet" href="/static/css/reset.css"> -->
 <!-- <link rel="stylesheet" href="/static/css/style.css"> -->
 {%endblock%}
@@ -15,21 +16,37 @@
 <div class="content">
   <div class="container">
   <div class="row">
-  <div class="col-md-3 columns">
+  <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-heading"><strong>Tasks</strong></div>
         <div class="list-group">
+
+          {% for task in tasks %}
          <a class="list-group-item " href="#">
-           task1
+           {{task.taskName}}
            <span class="pull-right">
            </span></a>
+            {% endfor %}
         </div>
       </div>
     </div>
 
 
-          </div>
           <div class="col-md-6 ">
+          <div class="task">
+          <form id ='dd'>
+            
+                      {{ddform.as_p}}
+         <button type="submit" value="directorDetail" id="http://localhost:8000/task/submitDirector/">Submit</button>
+         </form>
+          </div>
+
+          <div class="task">
+          <form id ='sbd'>
+            {{sbdform.as_p}}          
+                     <button type="submit" value="studentBodyDetail" id="http://localhost:8000/task/submitStudentBody/">Submit</button>
+          </form>
+          </div>
                     {% if messages %}
                     {% for msg in messages %}
                         <div class="alert alert-{{msg.level_tag}}">
@@ -44,7 +61,57 @@
         </div>
       </div>
   </div>
+<script>
+$("form button").click(function(event){
+  event.preventDefault();
+  id = "#id_"+$(this).val();
+  url = $(this).prop("id");
+  detail = $(id).val();
+  data = {}
+  data[$(this).val()] = detail
+  console.log(detail);
+  theAjax(url,data);
+});
+function theAjax(uri,data){
+ return $.ajax({
+    type:"POST",
+    dataType:"json",
+    url: uri,
+    data : data
+ });
+}
+ 
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '461359507257085',
+      xfbml      : true,
+      version    : 'v2.7'
+    });
+  };
 
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+<script>
+// Only works after `FB.init` is called
+function myFacebookLogin() {
+  FB.login(function(response){console.log(response.authResponse.accessToken);
+    data = {}
+    data['accessToken'] = response.authResponse.accessToken;
+    data['uid'] = response.authResponse.userID 
+    var url = '/ca/fbConnect/';
+    theAjax(url,data).done(function(){
+      location.reload();
+    });
+  }, {scope: 'publish_actions,public_profile'});
+}
+</script>
+<button onclick="myFacebookLogin()">Login with Facebook</button>
 
 {% endblock %}
 {%block extra_js%}

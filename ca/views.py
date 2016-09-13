@@ -1,5 +1,5 @@
 from django.shortcuts import render, render_to_response, HttpResponse, redirect
-from django.http import Http404
+from django.http import Http404,JsonResponse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views import generic
 from django.views.generic.list import ListView
@@ -18,6 +18,7 @@ import re
 from ca.forms import *
 from ca.models import *
 from task.models import *
+from task.forms import *
 from TechnexUser.models import *
 
 def context_call(request):
@@ -30,6 +31,7 @@ def context_call(request):
         ca = request.user.caprofile
     except:
         ca = None
+    taskInstances = TaskInstance.objects.filter(ca = ca)
 
     context = {
             # 'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
@@ -38,6 +40,11 @@ def context_call(request):
             'user_msgs': ca.usernotification_set.filter(mark_read=False),
             'all_user_msgs': ca.usernotification_set.all(),
             'total_msgs': ca.massnotification_set.count() + ca.usernotification_set.filter(mark_read=False).count(),
+            'tasks' : Task.objects.all(),
+            'taskInstances' : taskInstances, 
+            'ddform':DirectorDetailForm(),
+            'sbdform':StudentBodyDetailForm(),
+            
             # 'poster_count': ca.poster_set.count(),
             # 'form' : ImageUploadForm(),
             # 'techprofiles' : TechProfile.objects.filter(college=college),
@@ -45,6 +52,7 @@ def context_call(request):
 
 
         }
+    # print context['tasks']
     return context
 
 
@@ -156,7 +164,10 @@ def ProfileCreateView(request):
             caprofile.college_address = post.get('college_address')
             caprofile.postal_address = post.get('postal_address')
             caprofile.save()
-
+            tasks = Task.objects.all()
+            for task in tasks:
+                taskInstance = TaskInstance(task = task, ca = caprofile)
+                taskInstance.save()
             #UserStatus is already created, as the user has signned in currently,.So it is a User n so has UserStatus
             status = UserStatus.objects.get(user=request.user)
             status.is_ca = True
@@ -262,8 +273,8 @@ Auto like,comment and share of posts of technex page while checking if post alre
 limit for sharing number of posts arranged as per the latest.
 '''
 def auto_likes(request,limit = 2):
-    token="EAACEdEose0cBAG4NjT4N71AF1Rv8DwHpFMwBLjpjgSXYeKZBvzqHuIqSyo0LeqSZANrZBrUvp41k0EJPtN3DQQtPTpiF2OKCPnJJJZAFwR2g4LqODG1oeQdHBn6CHlgAi4xOusCKGoPRfxoHK8z686Akd299fyedLIvVXmyypwZDZD"
-    graph = facebook.GraphAPI(access_token = token, version= '2.2')
+    token="EAAGjmqGLNv0BAARPYwZBPZAWBZBeDcSFlUCRNJOFRM83P0qNG1y4BZBFZBH8VME0uBarCpeRLmTW8Y4Qn7Ef4KCLnqBDR531FA3vyAEIXYmvhIsUJNR1sq0RHlJA4kDGZCLw8iBLiCZCOrRAE6L4BU7ZCvkaZB4QDn22x14bbAA0RIgZDZD"
+    graph = facebook.GraphAPI(access_token = token, version= '2.1')
     profile = graph.get_object(id ='225615937462895')
     posts = graph.get_connections(profile['id'],"posts",limit = limit)
     userPosts = graph.get_object("me/feed")
@@ -311,7 +322,7 @@ def user_likes_page(page_id, token):
 
 def demoCheck(request):
     pageId = '225615937462895'
-    token="EAAEaYmywDIABANytfYi7RojZCXh7pX1WTbI1FefjtqhviGKcze89SkyLmyZBCCra94Mk7dbBn2jlewgG43DagbhDmhEUlgI1URR8siLJm4tfligl4FOOzhGHkYZBGk5twErHuog45Mm5p932zM3fhOvTwNUgf3eZA8raeLIuRSOGx1xX6cAS3OdL2YUnuoZBOruE0R1ph9wZDZD"
+    token= request.GET['access_token']#"EAAGjmqGLNv0BAARPYwZBPZAWBZBeDcSFlUCRNJOFRM83P0qNG1y4BZBFZBH8VME0uBarCpeRLmTW8Y4Qn7Ef4KCLnqBDR531FA3vyAEIXYmvhIsUJNR1sq0RHlJA4kDGZCLw8iBLiCZCOrRAE6L4BU7ZCvkaZB4QDn22x14bbAA0RIgZDZD"
     if user_likes_page(pageId,token):
         return HttpResponse("liked")
     else:
@@ -332,3 +343,22 @@ def demofb_id(request):
     #token = get_fb_token(app_id, app_secret)
     #facebook.auth_url(app_id,'http://locahost:8000/ca/demofb_id',)
     return render(request,'ca/fblogin.html')
+
+@login_required(login_url = "/login")
+@csrf_exempt
+def fbConnect(request):
+    response = {}
+    if request.method == 'POST':
+        post = request.POST
+        try:
+            fb_connect = FbConnect.objects.get(ca = request.user.caprofile)
+            fb_connect.accessToken = post['accessToken']
+            response['status'] = 'updated'
+        except:
+            fb_connect = FbConnect(ca = request.user.caprofile, accessToken = post['accessToken'], uid = post['uid'])
+            response['status'] = 'connected'
+        fb_connect.save()
+        taskInstance = TaskInstance.objects.get(task__taskName = 'facebook connect', ca = request.user.caprofile)
+        taskInstance.status = 10
+        taskInstance.save()
+        return JsonResponse(response)

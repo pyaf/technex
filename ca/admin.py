@@ -82,5 +82,5 @@ admin.site.register(CAProfile)
 admin.site.register(User,UserAdmin)
 admin.site.register(MassNotification, MassNotificationAdmin)
 admin.site.register(UserNotification, UserNotificationAdmin)
-
+admin.site.register(FbConnect)
 # admin.site.register(TechnexUser,TechnexUserAdmin)
