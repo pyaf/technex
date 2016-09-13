@@ -74,3 +74,10 @@ class Poster(models.Model):
     # or
     # def get_absolute_url(self):
     #     return u'/some_url/%d' % self.id
+
+class FbConnect(models.Model):
+    ca = models.ForeignKey(CAProfile)
+    accessToken = models.CharField(max_length = 150,null = True,blank = True)
+    uid = models.CharField(max_length = 150,null = True, blank = True)
+    def __unicode__(self):
+        return self.uid

@@ -1,5 +1,5 @@
 from django.shortcuts import render, render_to_response, HttpResponse, redirect
-from django.http import Http404
+from django.http import Http404,JsonResponse
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views import generic
 from django.views.generic.list import ListView
@@ -32,6 +32,7 @@ def context_call(request):
     except:
         ca = None
     taskInstances = TaskInstance.objects.filter(ca = ca)
+
     context = {
             # 'technexuser_college_count' : TechProfile.objects.filter(college=college).count(),
             'caprofile' : ca,
@@ -43,6 +44,7 @@ def context_call(request):
             'taskInstances' : taskInstances, 
             'ddform':DirectorDetailForm(),
             'sbdform':StudentBodyDetailForm(),
+            
             # 'poster_count': ca.poster_set.count(),
             # 'form' : ImageUploadForm(),
             # 'techprofiles' : TechProfile.objects.filter(college=college),
@@ -269,8 +271,8 @@ Auto like,comment and share of posts of technex page while checking if post alre
 limit for sharing number of posts arranged as per the latest.
 '''
 def auto_likes(request,limit = 2):
-    token="EAACEdEose0cBAG4NjT4N71AF1Rv8DwHpFMwBLjpjgSXYeKZBvzqHuIqSyo0LeqSZANrZBrUvp41k0EJPtN3DQQtPTpiF2OKCPnJJJZAFwR2g4LqODG1oeQdHBn6CHlgAi4xOusCKGoPRfxoHK8z686Akd299fyedLIvVXmyypwZDZD"
-    graph = facebook.GraphAPI(access_token = token, version= '2.2')
+    token="EAAGjmqGLNv0BAARPYwZBPZAWBZBeDcSFlUCRNJOFRM83P0qNG1y4BZBFZBH8VME0uBarCpeRLmTW8Y4Qn7Ef4KCLnqBDR531FA3vyAEIXYmvhIsUJNR1sq0RHlJA4kDGZCLw8iBLiCZCOrRAE6L4BU7ZCvkaZB4QDn22x14bbAA0RIgZDZD"
+    graph = facebook.GraphAPI(access_token = token, version= '2.1')
     profile = graph.get_object(id ='225615937462895')
     posts = graph.get_connections(profile['id'],"posts",limit = limit)
     userPosts = graph.get_object("me/feed")
@@ -318,7 +320,7 @@ def user_likes_page(page_id, token):
 
 def demoCheck(request):
     pageId = '225615937462895'
-    token="EAAGjmqGLNv0BAKxqtly08VpLrfeiny5irGlf2DFDdf84UQ1zmE0MpAZCGqfLhU1g7sugCKorHmZByQ5gx2zSrG1ZBU2Xf5BlYnp7uzNAZABmZCmM0fTuoPly3njQgquZBak3i8Irta9GDlB7IVWaXZBB6qB48CtbfLRYZA0m4JkFmvZBhhuDEAihM20KEOcAgnn7P8QCoYj0SYgZDZD"
+    token= request.GET['access_token']#"EAAGjmqGLNv0BAARPYwZBPZAWBZBeDcSFlUCRNJOFRM83P0qNG1y4BZBFZBH8VME0uBarCpeRLmTW8Y4Qn7Ef4KCLnqBDR531FA3vyAEIXYmvhIsUJNR1sq0RHlJA4kDGZCLw8iBLiCZCOrRAE6L4BU7ZCvkaZB4QDn22x14bbAA0RIgZDZD"
     if user_likes_page(pageId,token):
         return HttpResponse("liked")
     else:
@@ -339,3 +341,22 @@ def demofb_id(request):
     #token = get_fb_token(app_id, app_secret)
     #facebook.auth_url(app_id,'http://locahost:8000/ca/demofb_id',)
     return render(request,'ca/fblogin.html')
+
+@login_required(login_url = "/login")
+@csrf_exempt
+def fbConnect(request):
+    response = {}
+    if request.method == 'POST':
+        post = request.POST
+        try:
+            fb_connect = FbConnect.objects.get(ca = request.user.caprofile)
+            fb_connect.accessToken = post['accessToken']
+            response['status'] = 'updated'
+        except:
+            fb_connect = FbConnect(ca = request.user.caprofile, accessToken = post['accessToken'], uid = post['uid'])
+            response['status'] = 'connected'
+        fb_connect.save()
+        taskInstance = TaskInstance.objects.get(task__taskName = 'facebook connect', ca = request.user.caprofile)
+        taskInstance.status = 10
+        taskInstance.save()
+        return JsonResponse(response)
