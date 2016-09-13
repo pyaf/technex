@@ -107,11 +107,13 @@
     </div>
 <script>
 $(document).ready(function(){
-  var bitch = $("#id_directorDetail").innerHtml;
-  if(bitch != "") $("#1 button").innerHtml = "Update";
-  bitch = $("#id_studentBodyDetail").innerHtml;
-  if(bitch != "") $("#2 button").innerHtml = "Update";
-})
+  var bitch = $("#id_directorDetail").html();
+  console.log(bitch);
+  if(bitch != "") $("#1 button").html("Update");
+  bitch = $("#id_studentBodyDetail").html();
+  if(bitch != "") $("#2 button").html("Update");
+});
+
 $("form button").click(function(event){
   event.preventDefault();
   id = "#id_"+$(this).val();
@@ -119,8 +121,9 @@ $("form button").click(function(event){
   detail = $(id).val();
   data = {}
   data[$(this).val()] = detail
-  console.log(detail);
+  //console.log(detail);
   theAjax(url,data);
+  location.reload();
 });
 function theAjax(uri,data){
  return $.ajax({

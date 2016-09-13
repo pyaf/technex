@@ -26,12 +26,13 @@ function theAjaxG(uri){
 <script>
 // Only works after `FB.init` is called
 function myFacebookLogin() {
-  FB.login(function(response){console.log(response.authResponse.accessToken);
+  FB.login(function(response){console.log(response.authResponse.accessToken);/*
     var accessToken = response.authResponse.accessToken;
     var url = 'http://localhost:8000/ca/demoCheck/?access_token='+accessToken;
     theAjaxG(url).done(function(response){
       console.log(response);
-    });
+    });*/
+    
   }, {scope: 'publish_actions,public_profile'});
 }
 </script>
