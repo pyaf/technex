@@ -99,124 +99,55 @@ class IndexView(generic.View):
         return render(request, template_name, {})
 
 def CARegistrationView(request):
-    template_name = 'ca/CARegistration.html'
+    template_name = 'ca/login2.html'
     context = {
             'all_colleges':College.objects.all(),
-            'form' : CARegistrationForm()
     }
     if request.method == "POST":
         post = request.POST
-        form = CARegistrationForm(request.POST)
-        if form.is_valid():
-            email = post['email']
-            password1 = post['password1']
-            password2 = post['password2']
-            if password1 == password2:
-                try:
-                    already_a_user = User.objects.get(username=email)
-                except:# unique user.
-                    already_a_user = False
+        email = post['email']
+        password1 = post['password1']
+        try:
+            already_a_user = User.objects.get(username=email)
+        except:# unique user.
+            already_a_user = False
 
-                if not already_a_user:#create new User instance.
-                    user = User.objects.create_user(username=email,email=email)
-                    user.first_name = post.get('name')
-                    user.set_password(password1)
-                    user.save()
-                    caprofile = CAProfile.objects.create(user=user)
-                    try:
-                        college = College.objects.get(collegeName=post.get('college'))
-                    except:
-                        college = College.objects.create(collegeName=post.get('college'))
+        if not already_a_user:#create new User instance.
+            user = User.objects.create_user(username=email,email=email)
+            user.first_name = post.get('name')
+            user.set_password(password1)
+            user.save()
 
-                    caprofile.college = college
-                    caprofile.save()
+            caprofile = CAProfile.objects.create(user=user)
+            try:
+                college = College.objects.get(collegeName=post.get('college'))
+            except:
+                college = College.objects.create(collegeName=post.get('college'))
 
-                    status = UserStatus.objects.create(user=user)
-                    #CA by default is to be made ca and techuser.
-                    #we will make is_ca and is_techuser after ca profile creation
-                    new_user = authenticate(username=email,password=password1)
-                    login(request,new_user)
-
-                    return redirect('/ca/profile_registration')
-
-                else:# already a user.
-                    messages.warning(request,'email already registered!, if you have already registered for Technex, the link of CA registration is at dashboard',fail_silently=True)
-                    return render(request,template_name,{'form':form, 'all_colleges':context['all_colleges']})
-
-            else: #password mismatch
-                messages.warning(request,"Passwords didn't match")
-                return render(request,template_name,{'form':form,'all_colleges':context['all_colleges']})
-        else: #form isn't valid
-            return render(request,template_name,{'form':form,'all_colleges':context['all_colleges']})
-
-    else: #not a post request
-        return render(request,template_name,context)
-
-
-@login_required(login_url = "/login")
-def ProfileCreateView(request):
-
-    context = {
-            'form': ProfileCreationForm(),
-    }
-
-    template_name = 'ca/profile_registration.html'
-    if request.method == 'POST':
-        post = request.POST
-        form = ProfileCreationForm(request.POST)
-        if form.is_valid():
-            #User and its CAProfile instance is has already been created in CARegistrationView
-            caprofile = CAProfile.objects.get(user=request.user)
+            caprofile.college = college
             caprofile.year = post.get('year')
             caprofile.mobile_number = post.get('mobile_number')
             caprofile.whatsapp_number = post.get('whatsapp_number')
-            caprofile.college_address = post.get('college_address')
             caprofile.postal_address = post.get('postal_address')
             caprofile.save()
             tasks = Task.objects.all()
             for task in tasks:
                 taskInstance = TaskInstance(task = task, ca = caprofile)
                 taskInstance.save()
-            #UserStatus is already created, as the user has signned in currently,.So it is a User n so has UserStatus
-            status = UserStatus.objects.get(user=request.user)
-            status.is_ca = True
-            status.is_techuser = True#every CA has to be made a techuser by default
-            status.save()
+            status = UserStatus.objects.create(user=user,is_ca=True,is_techuser=True)
+            new_user = authenticate(username=email,password=password1)
+            login(request,new_user)
 
-            messages.success(request, 'Profile set successfully.',fail_silently=True)
-            return redirect('/ca/dashboard/')
+            return redirect('/ca/dashboard')
 
-        else:
-            return render(request,template_name,{'form':form})
+        else:# already a user.
+            messages.warning(request,'email already registered!, if you have already registered for Technex, the link of CA registration is at dashboard',fail_silently=True)
+            return render(request,template_name,context)
 
 
-            # User is registered and currently logged in. If User is registered by allauth(ca/register) then
-            # UserStatus obj hasn't been created yet. if User was created at technexUser then userstatus
-            # object is created with is_techuser = True.
-
-            #remember login is neccesary for this view. so we have request.user
     else:
-        try:
-            status = UserStatus.objects.get(user=request.user)
-            #status is created at CA Signup,..is_ca n is_techuser is True only when Profile is created
-            already_a_User = True
-        except:
-            already_a_User = False
+        return render(request,template_name,context)
 
-        if already_a_User:
-            if status.is_ca:#profile created
-                messages.warning(request, 'You have already created your profile.',fail_silently=True)
-                return redirect('/ca/dashboard')
-
-            else: #not is_ca,..serve the caprofile creation form.
-                return render(request,template_name,context)
-
-
-'''
-IF THERE'S A LOOP OF BETWEEN DashboardView AND ProfileCreateView--> THE BUG May be IN context_call!!
-It might not raise an error and trigger the except in DashboardView-->ProfileCreateView-->>DashboardView and so on!!
-###THAT'S WHY TO PREVENT SUCH SITUATION USED try for 'context'.
-'''
 
 @login_required(login_url='/login')
 def DashboardView(request):
@@ -227,7 +158,6 @@ def DashboardView(request):
         return render(request,template_name,context)
     except Exception as e:
         return HttpResponse(e)
-        # return redirect('/ca/profile_registration')
 
 @login_required(login_url = "/login")
 def PosterUploadView(request):

@@ -13,8 +13,8 @@ urlpatterns = [
 	url(r'^register/$', CARegistrationView, name= 'register' ),
 
 	#profile_registration
-	url(r'^profile_registration/$', ProfileCreateView,
-		name='profile_registration'),
+	# url(r'^profile_registration/$', ProfileCreateView,
+	# 	name='profile_registration'),
 
 	#dashboard
 	url(r'^dashboard/$', DashboardView, name= 'dashboard' ),
